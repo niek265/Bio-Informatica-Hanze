@@ -1,0 +1,16 @@
+Een Bag is een datastructuur die:
+    gebruikt kan worden om random samples in een populatie te simuleren
+    bij het ophalen van zo'n willekeurig item wordt dat niet uit de bag verwijderd
+    een collectie aan items kan bevatten
+    de items in een Bag zijn niet gesorteerd
+    duplicaten mogen
+    
+    Bedenk welke properties (= fields) een Bag moet hebben
+    Bedenk welke methods een Bag moet hebben en schrijf hiervoor de pseudocode
+    Implementeer je Bag in Python
+    controleer je code m.b.v. pylint
+    test je code
+
+Een GrabBag is een Bag waarbij, als er een willekeurig item opgehaald wordt, dit permanent uit de collectie verwijderd wordt.
+    Implementeer je GrabBag in Python
+    controleer je code m.b.v. pylint
