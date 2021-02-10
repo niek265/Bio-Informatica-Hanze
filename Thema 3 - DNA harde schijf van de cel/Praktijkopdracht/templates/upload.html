@@ -1,0 +1,19 @@
+{% extends 'main.html' %}
+<head>
+<title>{{ title }}</title>
+</head>
+{% block content %}
+<form id='form' method="post" action="/results" enctype="multipart/form-data">
+    <div class="block">
+        <input type='file' name="file" accept=".FASTQ">
+    </div>
+    <div class="block">
+        <div class="center">
+            <input type="submit" value="Submit">
+        </div>
+        <div>
+            {{ message }}
+        </div>
+    </div>
+</form>
+{% endblock %}

@@ -1,0 +1,45 @@
+<!-- Author = Niek Scholten  -->
+<!-- Date = 07-04-2019 -->
+<!-- Version 1.0 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+</head>
+<header>
+        <h1>
+            FASTQ Visualizer
+        </h1>
+</header>
+
+<ul id="topbar">b
+    <li class="{{ active1 }}">
+        <a href="{{  url_for('index') }}">
+            <img class="icon" src="/static/baseline-home-24px.svg" alt="Home"><h2>Home</h2>
+        </a>
+    </li>
+    <li class="{{ active2 }}">
+        <a href="{{  url_for('upload') }}">
+            <img class="icon" src="/static/baseline-cloud_upload-24px.svg" alt="Upload"><h2>Upload</h2>
+        </a>
+    </li>
+    <li class="{{ active3 }}">
+        <a href="{{  url_for('results') }}">
+            <img class="icon" src="/static/baseline-insert_chart-24px.svg" alt="Results"><h2>Results</h2>
+        </a>
+    </li>
+    <li class="{{ active4 }}" style="float:right">
+        <a href="{{  url_for('about') }}">
+            <img class="icon" src="/static/baseline-account_box-24px.svg" alt="About"><h2>About</h2>
+        </a>
+    </li>
+</ul>
+
+{%block content%}
+
+{%endblock%}
+
+</html>
