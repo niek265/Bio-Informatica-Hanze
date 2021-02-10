@@ -1,0 +1,14 @@
+bag.py
+
+Fields:
+    - list
+
+Methods:
+    add_item(item):
+        list.append(item)
+
+    get_item():
+        return list[random_number( >0, <length of item)]
+
+    remove_item(item):
+        list.remove(item)
