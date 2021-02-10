@@ -1,0 +1,34 @@
+geef de pseudocode van een algoritme dat de hoogste waarde bepaalt in een array
+
+geef de pseudocode van een algoritme dat een getal in een gesorteerde array op de goede plaats toevoegt
+
+A is een array van getallen waarvan er een dubbel voorkomt. Ontwerp een efficient algoritme (pseudocode) dat het dubbele getal opspoort.
+
+Herschrijf Bag m.b.v. array en/of ctype array
+
+Schrijf de Python code om twee gesorteerde lists/arrays samen te voegen tot een nieuwe gesorteerde list/array
+
+In welke O() loopt het ophalen van een waarde op een bepaalde positie in een array? Beredeneer dit aan de hand van de stof uit de les.
+In welke O() loopt het controleren of een bepaalde waarde zich in een array bevindt?
+idem, maar in een Bag?
+idem, maar bepalen wat de grootste waarde in een Bag is?
+
+Kun je de Bag aanpassen zodat het bepalen van de grootste waarde in O(1) loopt?
+
+H 2.6 opdrachten
+
+zet de volgende expressies op volgorde van kleinste naar grootste als n -> oneindig
+	n*log(n)
+	4^n
+	k*log(n)
+	5*n^2
+	40*log(n)
+	12*n^6
+
+Wat is de tijdscomplexiteit voor de volgende operaties in een Set:
+    difference()
+    intersection()
+
+Stel je hebt een set die geïmplementeerd (gebaseerd) is op een list.
+Beredeneer wat de tijdscomplexiteit is van het toevoegen van een item aan een dergelijke set.
+Idem, maar van het verwijderen van een item uit een dergelijke set.
