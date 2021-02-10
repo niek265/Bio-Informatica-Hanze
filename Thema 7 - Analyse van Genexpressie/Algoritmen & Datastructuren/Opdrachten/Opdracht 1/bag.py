@@ -30,10 +30,24 @@ class Bag:
         """
         Retrieves a random item from the list.
         """
-        return self.items[randint(0, len(self.items))]
+        return self.items[randint(0, len(self.items)-1)]
 
     def remove_item(self, item):
         """
         Deletes an item from the list.
         """
         self.items.remove(item)
+
+
+class GrabBag(Bag):
+    """
+    Inherits Bag, and changes the get_item function.
+    """
+    def get_item(self):
+        """
+        Grabs a random item and deletes it from the list.
+        """
+        index = randint(0, len(self.items)-1)
+        item = self.items[index]
+        self.items.remove(item)
+        return item
