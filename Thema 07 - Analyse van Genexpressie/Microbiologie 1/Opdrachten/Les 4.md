@@ -10,7 +10,7 @@ De slijmlaag bestaat uit dextran.
 3. Kapsels zijn minder doorlaatbaar voor kleinere deeltjes dan slijmlagen.
 4. Kapsels zitten steviger aan de cel gebonden dan een slijmlaag.
 
-###3. Geef ten minste drie functies van kapsels/slijmlagen.
+###3. Geef tenminste drie functies van kapsels/slijmlagen.
 1. Bescherming tegen uitdroging.
 2. Aanhechting van micro-organismen aan het oppervlak.
 3. Het vormen van biofilm.
