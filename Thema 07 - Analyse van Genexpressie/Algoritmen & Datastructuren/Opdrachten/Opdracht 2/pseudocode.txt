@@ -1,0 +1,20 @@
+1.
+largest_item = none
+for item in array:
+    if item > largest_item do:
+        largest_item = item
+print largest_item
+
+2.
+for item in sorted_array:
+    if item_to_insert > item and item_to_insert < sorted_array[position + 1]:
+        insert item at position in sorted_array
+
+3.
+for item in array:
+    if item not in new_array:
+        new_array += item
+    else:
+        print item
+
+
