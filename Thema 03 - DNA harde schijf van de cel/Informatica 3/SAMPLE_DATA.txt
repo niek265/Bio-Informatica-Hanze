@@ -1,0 +1,7 @@
+PATIENT TEMPERATUUR
+patient_X 36.7
+patiente_Y 39.2
+patient_Z 40.0
+patiente_Q 38.9
+patiente_R 39.2
+patient_S 39.4
