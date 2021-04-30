@@ -1,0 +1,28 @@
+---
+title: "R Notebook"
+author: "Vincent Talen, Niek Scholten"
+date: 30-4-2021
+output: html_document
+---
+
+```{r}
+library(deSolve)
+```
+
+Vraag 1:
+Corticosteroïden zijn hormonen die in de bijnieren worden geproduceerd.
+Deze stoffen worden gebruikt om lichamelijke reacties bij ontstekingen en infecties te remmen.
+
+Vraag 2:
+Bij inname van het geneesmiddel wordt de productie van receptors gehalt.
+Normaal gesproken worden receptors gemaakt bij normale transcriptie.
+
+Vraag 3:
+```{r}
+
+```
+
+Vraag 4:
+
+Vraag 5:
+We hebben geen resultaten kunnen produceren. Onze kennis van wiskunde blijkt onvoldoende om dit uit te kunnen voeren.
