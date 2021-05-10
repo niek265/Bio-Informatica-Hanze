@@ -16,3 +16,5 @@ Age in days:
 Treatment:
 * Normal Brain Homogenate
 * Scrapie
+
+All data was merged into [GSE144028.txt](GSE144028.txt) using [data-loading.r](data-loading.r).
