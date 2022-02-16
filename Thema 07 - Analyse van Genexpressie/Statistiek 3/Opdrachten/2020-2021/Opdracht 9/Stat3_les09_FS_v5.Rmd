@@ -1,0 +1,486 @@
+---
+title: "Stat3_Les09_FS_v4"
+author: "Emile Apol"
+date: "10-3-2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+###############################################################################
+#
+# Statistiek 3 BIN
+#
+# 2019-2020
+#
+# Emile Apol 
+#
+# Les 09 - Differentially Expressed Genes (DEGs) 2
+#
+###############################################################################
+
+
+
+###############################################################################
+#
+# Voorbeeld 9.1 - Differentiele genexpressie (1) 
+#
+###############################################################################
+
+In een experiment werd de 2log genexpressie van het gen HPX17 bepaald voor verschillende zoogdieren in actieve stand en in rust. Er werd gemeten bij 3 katten, 3 honden en 3 cavia's, elk een keer in actieve toestand en in rust. De resultaten staan in het volgende dataframe.
+
+```{r}
+genes <- data.frame(proefdier = factor(rep(c(paste0("kat",1:3), 
+                                             paste0("hond", 1:3),
+                                             paste0("cavia",1:3)), 2)),
+                    logexpressie = c(3.12, 4.78, 3.55, 2.88, 2.09, 3.11, 5.01, 4.79, 5.52,
+                                     2.81, 4.33, 3.08, 2.25, 1.77, 2.70, 4.55, 4.18, 5.37),
+                    toestand = factor(c(rep("actief", 9), rep("rust", 9))) )
+genes
+```
+
+a) Welke statistische toets is geschikt om te onderzoeken of het gen HPX17 differentieel tot expressie komt?
+
+Met een gepaarde t-toets, omdat elk "object" (= proefdier) onder 2 verschillende omstandigheden wordt gemeten.
+
+b) Maak een boxplot van deze data.
+
+```{r}
+boxplot(logexpressie ~ toestand, data = genes, xlab = "Toestand", ylab = "Log genexpressie HPX17")
+```
+
+of - mooier omdat gepaard - via apart package:
+
+```{r}
+library(ggpubr)
+newData <- data.frame("actief" = genes$logexpressie[genes$toestand %in% "actief"],
+                      "rust" = genes$logexpressie[genes$toestand %in% "rust"])
+newData
+ggpaired(data = newData, cond1 = "actief", cond2 = "rust", xlab = "Toestand",
+         ylab = "Log genexpressie HPX17")
+```
+
+
+c) Is er verschil in genexpressie tussen de actieve en rust toestand? (D.w.z., komt het gen differentieel tot expressie?) Toets met alpha = 0.05.
+
+```{r}
+( res <- t.test(logexpressie ~ toestand, data = genes, paired = T) )
+```
+
+p = 2.909e-05 < 0.05 = alpha, dus H1: Er is een significant verschil in genexpressie tussen actief en rust, dus het gen HPX17 komt differentieel tot expressie.
+
+d) Wat is de effectsterkte van "toestand" op de log genexpressie? Is het een zwak, matig of sterk effect?
+
+```{r}
+y.avs <- tapply(genes$logexpressie, genes$toestand, mean)
+vars <- tapply(genes$logexpressie, genes$toestand, var)
+d.av <- (y.avs[1] - y.avs[2])/sqrt((vars[1]+vars[2])/2)
+cat("Effectsterkte: d.av = ",d.av,"\n")
+```
+
+| d.av | = 0.36, dus zwak tot matig effect van toestand op log genexpressie.
+
+
+
+
+
+###############################################################################
+#
+# Voorbeeld 9.2 - Differentiele genexpressie (2)
+#
+###############################################################################
+
+
+In een 2-channel microarray experiment met 5 replica’s (i = 1..5), zoals beschreven in Voorbeeld 8.2, wordt gekeken of er bepaalde genen differentieel tot expressie komen, als je kankercellen en gezonde cellen vergelijkt. De gecorrigeerde, log-getransformeerde R- en G-waarden staan per gen g (1 t/m 100) als volgt in de ascii file DEG_3.txt met tabs als scheiding.
+
+a) Lees in R deze data in als dataframe "genes3", en bekijk de structuur van dit dataframe.
+
+```{r}
+setwd("H:/Hanze/ILST/vakken/kwartaal 07/Statistiek 3 BIN/lessen/2019-2020/Les 09 - DEG 2/")
+genes3 <- read.table("DEG_3.txt", header = T, sep = "\t")
+head(genes3)
+
+gene.names <- rownames(genes3)
+cat("\nGene names: ",gene.names,"\n")
+samples <- colnames(genes3)
+cat("Sample names: ",samples,"\n")
+```
+
+
+b) Bereken voor elke replica een vector met de M_(g,i) = log2(R_(g,i)/G_(g,i)) = log2(R_(g,i)) - log(G_(g,i)) waarden, en combineer deze kolommen tot een nieuw dataframe genes4. Zorg voor juiste rij- en kolomnamen.
+
+```{r}
+( Rcols <- samples[1:5] )
+( Gcols <- samples[6:10] )
+logR <- as.vector(as.matrix(genes3[, Rcols]))
+logG <- as.vector(as.matrix(genes3[, Gcols]))
+logM <- logR - logG
+n.replica <- length(Rcols)
+genes4 <- data.frame(matrix(logM, ncol = n.replica), row.names = gene.names)
+colnames(genes4) <- paste0(rep("M.",n.replica),1:(n.replica))
+
+head(genes4)
+```
+
+
+c) Voer op genes4 per gen (= rij) een 1-sample t-toets uit om te zien welke genen differentieel tot expressie komen. Verzamel de p-waarden in een vector. Gebruik de functie apply en een zelfgemaakte functie om de p-waarde van een 1-sample t-toets per rij van een matrix te berekenen (zie Voorbeeld 8.2.b). Hoeveel en welke genen zijn significant? Toets met alpha = 0.05 zonder multiple testing correctie.
+
+```{r}
+myTTest <- function(y, mu){
+  return(t.test(y, mu=mu)$p.value)
+}
+
+cat("p-waarden:\n")
+( pVec <- apply(genes4, 1, myTTest, mu = 0) )
+alpha <- 0.05
+
+cat("\nSignificant genes: ", gene.names[pVec < alpha], "\n")
+cat("Number of Significant genes = ", sum(pVec < alpha), "\n")
+```
+
+
+d) Corrigeer deze vector met p-waarden m.b.v. de Bonferroni en Holm methode. Hoeveel en welke genen zijn nu significant? Toets met alpha.F = 0.05.
+
+```{r}
+cat("Bonferroni correction:\n")
+pVec.Bon <- p.adjust(pVec, method = "bonferroni")
+cat("DEGs: ", gene.names[pVec.Bon < alpha], "\n")
+n.DEG.Bon <- sum(pVec.Bon < alpha)
+cat("Number of DEGs = ", n.DEG.Bon,"\n\n")
+
+cat("Holm correction:\n")
+pVec.Holm <- p.adjust(pVec, method = "holm")
+cat("DEGs: ", gene.names[pVec.Holm < alpha], "\n")
+n.DEG.Holm <- sum(pVec.Holm < alpha)
+cat("Number of DEGs = ", n.DEG.Holm,"\n")
+```
+
+
+e) Programmeer in R een eigen functie die voor een rij (= gen) van dataframe genes3 de p-waarde van een gepaarde t-toets berekent. Tip: het aantal paren is de helft van de rijlengte.
+
+```{r}
+myPairedTTest <- function(x){
+  n.elem <- length(x)
+  n.pairs <- n.elem / 2 # half of the length
+  # make a factor with groups
+  mySample <- factor(c(rep(1, n.pairs), rep(2, n.pairs)))
+  t.test(x ~ mySample, paired=T)$p.value  
+}
+```
+
+f) Voer op genes3 per gen (= rij) een gepaarde t-toets uit om te zien welke genen differentieel tot expressie komen. Verzamel de p-waarden in een vector. Gebruik de functie apply en de zelfgemaakte functie van e. om de p-waarde van een gepaarde t-toets per rij van een matrix te berekenen. Gebruik geen multiple testing correctie. Hoeveel en welke genen zijn significant? Toets met alpha.F = 0.05.
+
+```{r}
+( pVec2 <- apply(genes3, 1, myPairedTTest) )
+
+alpha <- 0.05
+
+cat("\nSignificant genes: ", gene.names[pVec2 < alpha], "\n")
+cat("Number of Significant genes = ", sum(pVec2 < alpha), "\n")
+
+```
+
+
+g) Corrigeer deze vector met p-waarden m.b.v. de Bonferroni en Holm methode. Hoeveel en welke genen zijn nu significant? Toets met alpha.F = 0.05.
+
+```{r}
+cat("Bonferroni correction:\n")
+pVec.Bon <- p.adjust(pVec2, method = "bonferroni")
+cat("DEGs: ", gene.names[pVec.Bon < alpha], "\n")
+n.DEG.Bon <- sum(pVec.Bon < alpha)
+cat("Number of DEGs = ", n.DEG.Bon,"\n\n")
+
+cat("Holm correction:\n")
+pVec.Holm <- p.adjust(pVec2, method = "holm")
+cat("DEGs: ", gene.names[pVec.Holm < alpha], "\n")
+n.DEG.Holm <- sum(pVec.Holm < alpha)
+cat("Number of DEGs = ", n.DEG.Holm,"\n")
+```
+
+
+
+
+###############################################################################
+#
+# Voorbeeld 9.3 - Genexpressie bij verschillende personen (1)
+#
+###############################################################################
+
+Met behulp van 5 dual-channel microarray’s is van 5 personen de expressie van een bepaald gen gemeten onder twee omstandigheden: in rust en na zware inspanning. Per persoon is één microarray gebruikt. De log-getransformeerde expressiedata (R = zware inspanning, G = in rust = controle) staan in de file inspanning.txt, dit is een tab-separated tekstfile met headers).
+
+a) Lees de data in.
+
+```{r}
+setwd("E:/Hanze/ILST/vakken/kwartaal 07/Statistiek 3 BIN/lessen/2019-2020/Les 09 - DEG 2/")
+myData <- read.table("inspanning.txt", header = T, sep = "\t")
+myData
+```
+
+
+b) Maak een boxplot van deze data met op de x-as de twee omstandigheden (wel/geen inspanning). Lijkt er effect te zijn van inspanning?
+
+```{r}
+newData <- data.frame(logexpressie = c(myData$logR, myData$logG),
+                      toestand = factor(c(rep("Zware inspanning", 5), rep("Rust", 5))))
+boxplot(logexpressie ~ toestand, data = newData, xlab = "Toestand", ylab = "Log genexpressie")
+```
+
+Uit deze grafiek lijkt er geen effect te zijn...
+
+of - beter omdat gepaard - 
+
+```{r}
+library(ggpubr)
+
+ggpaired(data = myData, cond1 = "logG", cond2 = "logR", xlab = "Toestand",
+         ylab = "Log genexpressie")
+```
+
+Uit deze grafiek lijkt wel wel systematisch effect te zijn...
+
+
+c) Leg uit waarom een gepaarde t-toets een geschikte methode is om te onderzoeken of zware inspanning een verschil in genexpressie geeft voor dit bepaalde gen.
+
+Het betreft 2 groepen met gepaarde metingen, dus een gepaarde t-toets.
+
+d) Leidt zware inspanning tot een significant verschil in genexpressie? Toets met alpha = 0.05.
+
+```{r}
+t.test(logexpressie ~ toestand, data = newData, paired = T)
+```
+
+OF
+
+```{r}
+t.test(myData$logR, myData$logG, paired = T)
+```
+
+p = 0.02471 < 0.05 = alpha, dus H1: zware inspanning leidt tot een significant verschil in genexpressie.
+
+e) Wat is de effectsterkte, d.w.z. wat is de waarde van Cohen’s d.av? Is het effect van inspanning zwak, matig of sterk?
+
+```{r}
+y.avs <- tapply(newData$logexpressie, newData$toestand, mean)
+vars <- tapply(newData$logexpressie, newData$toestand, var)
+d.av <- (y.avs[1] - y.avs[2])/sqrt((vars[1]+vars[2])/2)
+cat("Effectsterkte: d.av = ",d.av,"\n")
+```
+
+| d.av | < 0.2, dus een heel zwak effect van inspanning op genexpressie.
+
+
+f) Wat zou de uitslag van de analyse zijn als je een Welch t-toets had gebruikt? Verklaar het
+verschil.
+
+```{r}
+t.test(logexpressie ~ toestand, data = newData, paired = F)
+```
+
+p = 0.9295 >> 0.05 = alpha, dus H0: zware inspanning leidt NIET tot een significant verschil in genexpressie.
+
+Verschil komt omdat door het "gebruik" van 5 verschillende personen, met elk heel andere genexpressie niveaus, er heel veel extra ruis in de data zit, waardoor het verschil tussen inspanning en rust "overschreeuwd" wordt.
+
+
+
+###############################################################################
+#
+# Voorbeeld 9.4 - Genexpressie bij verschillende personen (2)
+#
+###############################################################################
+
+Met behulp van 10 dual-channel microarray’s is van 10 personen de expressie van een bepaald gen gemeten onder twee omstandigheden: ziek en na 2 weken medicijngebruik. Per persoon is één microarray gebruikt. De log-getransformeerde expressiedata (R = met medicijn, G = zonder medicijn = ziek = controle) staan in de file medicijn.txt, dit is een tab-separated tekstfile met headers.
+
+a) Lees de data in.
+
+```{r}
+setwd("E:/Hanze/ILST/vakken/kwartaal 07/Statistiek 3 BIN/lessen/2019-2020/Les 09 - DEG 2/")
+myData <- read.table("medicijn.txt", header = T, sep = "\t")
+myData
+```
+
+b) Maak een boxplot van deze data met op de x-as de twee omstandigheden (wel/geen medicijn). Lijkt er effect te zijn van het medicijn?
+
+```{r}
+newData <- data.frame(logexpressie = c(myData$logR, myData$logG),
+                      toestand = factor(c(rep("Met medicijn", 5), rep("Zonder medicijn", 5)), 
+                                        levels = c("Zonder medicijn", "Met medicijn")) )
+boxplot(logexpressie ~ toestand, data = newData, xlab = "Toestand", ylab = "Log genexpressie")
+```
+
+Er lijkt wel een verschil te zijn...
+
+OF - beter omdat gepaard - 
+
+```{r}
+library(ggpubr)
+
+ggpaired(data = myData, cond1 = "logG", cond2 = "logR", xlab = "Toestand",
+         ylab = "Log genexpressie")
+```
+
+Er lijkt nu zeker een effect te zijn, omdat individuele verschillen per patient nu heel duidelijk zijn!
+
+c) Leg uit waarom een gepaarde t-toets een geschikte methode is om te onderzoeken of medicijngebruik een verschil in genexpressie geeft voor dit bepaalde gen.
+
+Omdat de data gepaard gemeten zijn (d.w.z. herhaalde metingen op dezelfde patienten onder twee verschillende omstandigheden, na twee weken).
+
+d) Leidt medicijngebruik tot een significant verschil in genexpressie? Toets met alpha = 0.05.
+
+```{r}
+t.test(logexpressie ~ toestand, data = newData, paired = T)
+```
+
+p = 2.166e-05 << 0.05 = alpha, dus H1: medicijngebruik leidt tot een significant verschil in genexpressie.
+
+e) Wat is de effectsterkte, d.w.z. wat is de waarde van Cohen’s d.av? Is het effect van medicijngebruik op genexpressie zwak, matig of sterk?
+
+```{r}
+y.avs <- tapply(newData$logexpressie, newData$toestand, mean)
+vars <- tapply(newData$logexpressie, newData$toestand, var)
+d.av <- (y.avs[1] - y.avs[2])/sqrt((vars[1]+vars[2])/2)
+cat("Effectsterkte: d.av = ",d.av,"\n")
+```
+
+| d.av | = 1.05 > 0.8, dus medicijngebruik heeft een sterk effect op genexpressie.
+
+
+
+
+###############################################################################
+#
+# Voorbeeld 9.5 - Van dataframe naar vector en terug; paste0
+#
+###############################################################################
+
+Functie paste0:
+
+```{r}
+vector1 <- "a"
+vector2 <- c("a", "b")
+vector3 <- 1:3
+
+( paste0(vector2, vector3) )
+
+( paste0(vector1, vector3))
+```
+
+
+
+```{r}
+# Maak voorbeelddata:
+( y <- 1:16 )
+n.replica <- 2
+
+#Maak hiervan een matrix M met 4 kolommen:
+( D <- matrix(y, ncol = 4) )
+
+colnames(D) <- c(paste0("logR.",1:n.replica),
+                 paste0("logG.",1:n.replica))
+D
+rownames(D) <- paste0("Gene.",1:4)
+D
+X <- data.frame(D)
+X
+```
+
+
+
+
+Bereken de vectoren M.1 = logR.1 - logG.1 en M.2 = logR.2 - logG.2: 
+
+```{r}
+# Op basis van de matrix:
+cat("Matrix:\n")
+( M.1 <- D[ ,"logR.1"] - D[ ,"logG.1"] )
+( M.2 <- D[ ,"logR.2"] - D[ ,"logG.2"] )
+( D.2 <- matrix(data = c(M.1, M.2), ncol = 2) )
+colnames(D.2) <- paste0("M.",1:n.replica)
+rownames(D.2) <- paste0("Gene.",1:4)
+D.2
+
+
+cat("\n\nDataframe:\n")
+# Op basis van het dataframe:
+( M.1 <- X[ ,"logR.1"] - X[ ,"logG.1"] )
+( M.2 <- X[ ,"logR.2"] - X[ ,"logG.2"] )
+X.2 <- data.frame(M.1, M.2)
+rownames(X.2) <- paste0("Gene.",1:4)
+X.2
+
+```
+
+
+
+
+Bereken de vectoren M.1 = logR.1 - logG.1 en M.2 = logR.2 - logG.2:
+
+Handiger manier, voor data = MATRIX:
+
+```{r}
+( Rcols <- paste0("logR.",1:n.replica) )
+( Gcols <- paste0("logG.",1:n.replica) )
+
+( logR <- as.vector(D[ ,Rcols]) )
+( logG <- as.vector(D[ ,Gcols]) )
+( M <- logR - logG )
+( D.2 <- matrix(M, ncol = n.replica) )
+
+colnames(D.2) <- paste0("M.",1:n.replica)
+rownames(D.2) <- paste0("Gene.",1:4)
+D.2
+```
+
+
+
+
+
+
+
+
+
+Voor data = DATAFRAME:
+
+
+```{r}
+( Rcols <- paste0("logR.",1:n.replica) )
+( Gcols <- paste0("logG.",1:n.replica) )
+
+logR <- as.vector(X[ ,Rcols])
+logR
+logG <- as.vector(X[ ,Gcols])
+logG
+M <- logR - logG
+M
+D.2 <- matrix(M, ncol = n.replica)
+D.2
+colnames(D.2) <- paste0("M.",1:n.replica)
+rownames(D.2) <- paste0("Gene.",1:4)
+D.2
+```
+
+
+```{r}
+( Rcols <- paste0("logR.",1:n.replica) )
+( Gcols <- paste0("logG.",1:n.replica) )
+
+logR <- as.vector(as.matrix(X[ ,Rcols]))
+logR
+logG <- as.vector(as.matrix(X[ ,Gcols]))
+logG
+M <- logR - logG
+M
+D.2 <- matrix(M, ncol = n.replica)
+D.2
+colnames(D.2) <- paste0("M.",1:n.replica)
+rownames(D.2) <- paste0("Gene.",1:4)
+D.2
+X.2 <- data.frame(D.2)
+X.2
+```
+
+
+
+

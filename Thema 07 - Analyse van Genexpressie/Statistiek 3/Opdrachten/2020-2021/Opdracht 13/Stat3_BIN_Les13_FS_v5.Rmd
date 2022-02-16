@@ -1,0 +1,484 @@
+---
+title: "Stat3_BIN_Les13_FS_v4"
+author: "Emile Apol"
+date: "3/30/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+###############################################################################
+#
+# Statistiek 3 BIN
+#
+# 2019-2020
+#
+# Emile Apol 
+#
+# Les 13 - Clustering 2
+#
+###############################################################################
+
+
+###############################################################################
+#
+# Voorbeeld 13.1 - Kleurpalet in R
+#
+###############################################################################
+
+a) Maak een eigen kleurpalet van groen via zwart naar rood.
+
+```{r}
+MA.color <- function(n=11){
+  colorRampPalette(c("green", "black", "red"), space = "rgb")(n)
+}
+```
+```{r}
+x <- -10:10
+X <- matrix(x, ncol = 1)
+image(X, col = MA.color(21))
+```
+
+
+b) Maak een eigen kleurpalet van groen via wit naar rood.
+
+
+```{r}
+MA.color <- function(n=11){
+  colorRampPalette(c("green", "white", "red"), space = "rgb")(n)
+}
+
+x <- -10:10
+X <- matrix(x, ncol = 1)
+image(X, col = MA.color(21))
+```
+
+
+Dit zijn twee kleurpaletten die niet vriendelijk zijn voor mensen met een vorm van kleurenblindheid.
+
+c) Maak een eigen kleurpalet van blauw via wit naar rood.
+
+
+```{r}
+MA.color <- function(n=11){
+  colorRampPalette(c("blue", "white", "red"), space = "rgb")(n)
+}
+
+x <- -10:10
+X <- matrix(x, ncol = 1)
+image(X, col = MA.color(21))
+```
+
+d) Maak een eigen kleurpalet van blauw via zwart naar rood.
+
+
+```{r}
+MA.color <- function(n=11){
+  colorRampPalette(c("blue", "black", "red"), space = "rgb")(n)
+}
+
+x <- -10:10
+X <- matrix(x, ncol = 1)
+image(X, col = MA.color(21))
+```
+
+
+e) Maak een eigen kleurpalet van blauw via wit naar oranje.
+
+
+```{r}
+MA.color <- function(n=11){
+  colorRampPalette(c("blue", "white", "orange"), space = "rgb")(n)
+}
+
+x <- -10:10
+X <- matrix(x, ncol = 1)
+image(X, col = MA.color(21))
+```
+
+f) Maak een eigen kleurpalet van blauw via zwart naar oranje.
+
+
+```{r}
+MA.color <- function(n=11){
+  colorRampPalette(c("blue", "black", "orange"), space = "rgb")(n)
+}
+
+x <- -10:10
+X <- matrix(x, ncol = 1)
+image(X, col = MA.color(21))
+```
+
+
+
+###############################################################################
+#
+# Voorbeeld 13.2 - 4 genen en 3 samples
+#
+###############################################################################
+
+```{r}
+myData <- data.frame(M.1 = c(8.0, 7.0, 6.0, 2.0),
+                     M.2 = c(8.0, 8.0, 6.0, 3.0),
+                     M.3 = c(2.0, 7.0, 7.0, 8.0))
+rownames(myData) <- paste0("Gene ",LETTERS[1:4])
+myData
+```
+
+a) Maak m.b.v. de functie matplot (en evt. matlines) een grafiek van het gedrag van elk gen als functie van sample. Tip: Maak eerst een grafiek zonder assen, en maak daarna apart elke as.
+
+```{r}
+matplot(t(myData), type = "n", xlab = "Sample", ylab = "Log expressie", axes = F)
+matlines(t(myData), col = 1:nrow(myData), lty = 1)
+axis(1, at = 1:ncol(myData), labels = colnames(myData))
+axis(2, at = NULL)
+```
+
+
+
+
+b) Cluster deze genen o.b.v. Euclidische afstand en "average" linkage. Maak een dendrogram. Hint: het de optie hang=-1 kun je het dendrogram mooier maken, door de "takken" door te laten trekken tot de basis.
+
+
+```{r}
+dMat  <- dist(myData, method="euclidean")
+clust <- hclust(dMat, method="average")
+plot(clust, xlab="Genen", ylab="Euclidische afstand", hang=-1, sub = "")
+```
+
+c) Maak een goede heatmap van deze data. Kies een geschikt kleurpalet. Cluster de genen en de samples o.b.v. Euclidische afstanden en "average" linkage.
+
+```{r}
+# Definieer eigen kleurpalet:
+
+MA.color <- function(n=11){
+  colorRampPalette(c("blue", "white", "orange"), space = "rgb")(n)
+}
+
+# Definieer zelf eigen distance en linkage functies:
+
+myDist <- function(x){
+  return(dist(x, method = "euclidean"))
+}
+
+myHClust <- function(x){
+  return(hclust(x, method = "average"))
+}
+
+heatmap(as.matrix(myData), distfun=myDist, hclustfun = myHClust, col = MA.color())
+
+# netste manier: via heatmap.2 in gplots
+
+library("gplots")
+heatmap.2(as.matrix(myData), distfun=myDist, hclustfun = myHClust, 
+          symbreaks = T, trace = "none", scale = "none", col = MA.color())
+
+
+
+```
+
+
+d) Cluster deze genen o.b.v. absolute Pearson afstand en "average" linkage. Maak een dendrogram. Hint: het de optie hang=-1 kun je het dendrogram mooier maken, door de "takken" door te laten trekken tot de basis.
+
+```{r}
+dMat  <- as.dist(1 - abs(cor(t(myData))))
+clust <- hclust(dMat, method="average")
+plot(clust, xlab="Genen", ylab="Absolute Pearson afstand", hang=-1, sub = "")
+```
+
+
+e) Maak een goede heatmap van deze data. Kies een geschikt kleurpalet. Cluster de genen en de samples o.b.v. absolute Pearson afstanden en "average" linkage.
+
+
+```{r}
+# Definieer eigen kleurpalet:
+
+MA.color <- function(n=11){
+  colorRampPalette(c("blue", "white", "orange"), space = "rgb")(n)
+}
+
+# Definieer zelf eigen distance en linkage functies:
+
+myDist <- function(x){
+  return(as.dist(1 - abs(cor(t(x)))))
+}
+
+myHClust <- function(x){
+  return(hclust(x, method = "average"))
+}
+
+heatmap(as.matrix(myData), distfun=myDist, hclustfun = myHClust, col = MA.color())
+
+# netste manier: via heatmap.2 in gplots
+
+library("gplots")
+heatmap.2(as.matrix(myData), distfun=myDist, hclustfun = myHClust, 
+          symbreaks = T, trace = "none", scale = "none", col = MA.color())
+
+
+
+```
+
+
+f) Maak een goede heatmap van deze data. Kies een geschikt kleurpalet. Cluster ALLEEN de genen o.b.v. absolute Pearson afstanden en "average" linkage.
+
+```{r}
+# Definieer eigen kleurpalet:
+
+MA.color <- function(n=11){
+  colorRampPalette(c("blue", "white", "orange"), space = "rgb")(n)
+}
+
+# Definieer zelf eigen distance en linkage functies:
+
+myDist <- function(x){
+  return(as.dist(1 - abs(cor(t(x)))))
+}
+
+myHClust <- function(x){
+  return(hclust(x, method = "average"))
+}
+
+heatmap(as.matrix(myData), distfun=myDist, hclustfun = myHClust, col = MA.color(), Colv = NA)
+
+# netste manier: via heatmap.2 in gplots
+
+library("gplots")
+heatmap.2(as.matrix(myData), distfun=myDist, hclustfun = myHClust, 
+          symbreaks = T, trace = "none", scale = "none", col = MA.color(), Colv = NA)
+
+
+
+```
+
+
+
+
+###############################################################################
+#
+# Voorbeeld 13.3 - Broodbeleg (1)
+#
+###############################################################################
+
+Van bijna al onze etenswaren staat op het etiket de nutrientensamenstelling vermeld. Dit bestaat o.a. uit de hoeveelheid eiwit, suikers, zetmeel, vetten, vezels en natrium per 100 g product. In deze opgave gaan we verschillende soorten broodbeleg (jam, kaas, vlees, vlokken, hagelslag etc.) vergelijken en clusteren op basis van nutrientensamenstelling.
+
+De dataset “Broodbeleg_1.txt” bevat voor 27 verschillende producten o.a. de waarden van de 7 eigenschappen:
+
+  eiwit        = g eiwit per 100 g product
+  kool.suiker  = g suiker per 100 g product
+  kool.anders  = g overige koolhydraten (zetmeel) per 100 g product
+  vet.vz       = g verzadigd vet per 100 g product
+  vet.ov       = g onverzadigd vet per 100 g product
+  vez          = g voedingsvezels per 100 g product
+  Na           = g natrium per 100 g product
+  
+Daarnaast is er o.a. nog een kolom Omschrijving die aangeeft welk product het is (met fabrikant).
+
+a) Lees in R deze tab-separated dataset met header in als dataframe myData.
+
+```{r}
+setwd("H:/Hanze/ILST/vakken/kwartaal 07/Statistiek 3 BIN/lessen/2019-2020/Les 12 - Clustering 1/")
+dir()
+
+myData <- read.table("Broodbeleg_1.txt", header=T)
+
+View(myData)
+head(myData)
+```
+
+
+b) Maak uit dataframe myData een nieuw dataframe M door alleen de 7 bovengenoemde nutrienten (eiwit, kool.suiker, ..., Na) te selecteren, en de "Omschrijving" als rownames te gebruiken. NB. Het is belangrijk om de juiste rownames in het dataframe te hebben wat je wilt gaan clusteren, zodan in het dendrogram elk item duidelijk herkanbaar is!
+
+
+```{r}
+properties <- c("eiwit", "kool.suiker", "kool.anders", "vet.vz", "vet.ov", "vez", "Na" )
+prod.names <- myData$Omschrijving
+
+M <- myData[, properties]
+rownames(M) <- prod.names
+View(M)
+```
+
+c) Maak van dataframe M een heatmap waarbij je zowel de producten als de nutrienten clustert. Gebruik Euclidische afstanden en "average" linkage". Gebruik een geschikt kleurpalet.
+
+```{r}
+# Definieer eigen kleurpalet:
+
+MA.color <- function(n=11){
+  colorRampPalette(c("blue", "white", "orange"), space = "rgb")(n)
+}
+
+# Definieer zelf eigen distance en linkage functies:
+
+myDist <- function(x){
+  return(dist(x, method = "euclidean"))
+}
+
+myHClust <- function(x){
+  return(hclust(x, method = "average"))
+}
+
+heatmap(as.matrix(M), distfun=myDist, hclustfun = myHClust, col = MA.color())
+
+# OF: via heatmap.2 in gplots
+
+library("gplots")
+heatmap.2(as.matrix(M), distfun=myDist, hclustfun = myHClust, 
+          symbreaks = F, trace = "none", scale = "none", col = MA.color())
+```
+
+d) Er lijkt sprake te zijn van twee subclusters van producten, zie ook Voorbeeld 12.5. Als je kijkt naar de heatmap, waarin verschillen deze twee subclusters dan vooral?
+
+De "zoete" subcluster (bovenste) heeft vooral meer kool.suiker, de "hartige" subcluster vooral meer vet (beide types) en meer eiwit.
+
+
+
+
+###############################################################################
+#
+# Voorbeeld 13.4 - Microarray experiment met 3 zoogdiersoorten
+#
+###############################################################################
+
+In een microarray experiment worden de genexpressies van 3 verschillende zoogdieren (varken = PIG, hond = DOG, en koe = COW) onder stress bepaald. Er worden 4 varkens, 4 honden en 5 katten onderzocht met in totaal 13 dual channel chips, telkens ten opzichte van een vast referentie sample (= stressloos). Voor iedere chip zijn de intensiteiten gecorrigeerd voor de achtergrond, is een log-transformatie toegepast, zijn de log fold-changes M = log2(R/G) bepaald ten opzichte van de stressloze referentie (G), en zijn de data genormaliseerd, d.w.z. gecorrigeerd voor eventuele bias. Het resultaat is een file met daarin voor 2000 genen de log fold-changes M.ik voor soorten i (= PIG, DOG, COW) en replica’s k (= 1..4, 1…4 en
+1…5), dus als kolommen:
+
+PIG.1 PIG.2 PIG.3 PIG.4 DOG.1 … DOG.4 COW.1 … COW.5
+
+Deze data staan in de tab-separated file “MA_mammals.txt”, die een header heeft en de gen-namen als rownames. We willen graag weten of er tussen deze 3 soorten zoogdieren verschillen zijn in de genexpressie ten gevolge van stress.
+
+
+a) Lees in R deze tab-separated dataset met header in als dataframe myData.
+
+```{r}
+setwd("H:/Hanze/ILST/vakken/kwartaal 07/Statistiek 3 BIN/lessen/2019-2020/Les 13 - Clustering 2/")
+dir()
+
+myData <- read.table("MA_mammals.txt", header=T, sep="\t")
+head(myData)
+```
+
+b) Wat voor soort statistische toets is geschikt om voor deze data te bepalen of er een significant verschil is in expressie tussen de 3 zoogdiersoorten. Leg uit.
+
+Een 1-way ANOVA, want er zijn per gen 3 groepen om te vergelijken; we hebben wel een 2-channel MA gebruikt, maar per MA al een logfoldwaarde M berekend (dus dit is de gepaarde data!). In termen van de logfoldwaarden M zijn er gewoon 4, 4 en 5 replica's gemeten!
+
+
+c) Maak in R een eigen functie die per gen (= regel in je dataframe) een p-waarde uitrekent voor de toets die je bij b. hebt bedacht.
+
+```{r}
+myANOVA <- function(x,g){
+  return(summary(aov(x ~ g))[[1]]$Pr[1])
+}
+```
+
+d) Voer de toets uit met alpha = 0.05. Hoeveel genen zijn significant? Welke genen zijn dit?
+
+```{r}
+n.rep.PIG <- 4; n.rep.DOG <- 4; n.rep.COW <- 5 
+g <- factor(c(rep("PIG", n.rep.PIG), rep("DOG", n.rep.DOG), rep("COW", n.rep.COW)))
+
+pVals <- apply(myData, 1, myANOVA, g)
+
+alpha <- 0.05
+
+cat("\n\nAantal significante genen: ",sum(pVals < alpha),"\n")
+cat("\nSignificante genen: ", rownames(myData)[pVals < alpha],"\n")
+```
+
+e) Hoeveel vals positieve uitslagen verwacht je in dit geval?
+
+0.05 * 2000 = 100 vals positieve uitslagen...
+
+
+
+f) Voer een multiple testing correctie uit op de p-waarden. Gebruik hiervoor de FDR-methode. Hoeveel genen zijn significant? Welke genen zijn dit?
+
+```{r}
+pVals.fdr <- p.adjust(pVals, method="fdr")
+
+cat("\n\nAantal significante genen: ", sum(pVals.fdr < alpha),"\n")
+cat("\nSignificante genen: ", rownames(myData)[pVals.fdr < alpha],"\n")
+
+```
+
+g) Maak een nieuw dataframe MA.DEG met daarin alléén de bij f. gevonden significante genen (DEG’s).
+
+```{r}
+# Vector met alleen de DEG's erin:
+myDEGs <- rownames(myData)[pVals.fdr < alpha]
+
+MA.DEG <- myData[myDEGs,]
+View(MA.DEG)
+
+
+```
+
+h) Voer een hiërarchische clustering uit op de significante genen (DEG’s) op basis van de 13 samples. Gebruik “euclidean” afstanden en “average” linkage. Maak via plot een dendrogram. Je kunt de grootte van de labels eventueelaanpassen via cex. Pas de uitlijning van de labels aan via hang=-1.
+
+```{r}
+dMat <- dist(MA.DEG, method="euclidean")
+clust <- hclust(dMat, method="average")
+plot(clust, hang=-1, xlab="Genes", ylab="Euclidean distance",
+     main="Dendrogram mammal DEG's", sub="")
+```
+
+
+i) Maak met de functie cutree vier subclusters (zie ppt van Les 13). Wat zijn de gen-namen in elke subcluster?
+
+```{r}
+sc.4 <- cutree(clust, k=4)
+
+cat("Subcluster 1 bestaat uit genen: ", myDEGs[sc.4==1],"\n\n")
+cat("Subcluster 2 bestaat uit genen: ", myDEGs[sc.4==2],"\n\n")
+cat("Subcluster 3 bestaat uit genen: ", myDEGs[sc.4==3],"\n\n")
+cat("Subcluster 4 bestaat uit genen: ", myDEGs[sc.4==4],"\n\n")
+
+```
+
+
+j) Maak een goede heapmap van de DEG's. Gebruik “euclidean” afstanden en “average” linkage. Kies een geschikt kleurpalet.
+
+```{r}
+# Definieer eigen kleurpalet:
+
+MA.color <- function(n=11){
+  colorRampPalette(c("blue", "white", "orange"), space = "rgb")(n)
+}
+
+# heatmap met ook euclidische afstand en evrage linkage:
+
+myDist <- function(x){
+  return(dist(x, method = "euclidean"))
+}
+
+myHClust <- function(x){
+  return(hclust(x, method = "average"))
+}
+
+heatmap(as.matrix(MA.DEG), distfun=myDist, hclustfun = myHClust, col = MA.color())
+
+# netste manier: via heatmap.2 in gplots
+
+library("gplots")
+heatmap.2(as.matrix(MA.DEG), distfun=myDist, hclustfun = myHClust, 
+          symbreaks = T, trace = "none", scale = "none", col = MA.color())
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

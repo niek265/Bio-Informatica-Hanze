@@ -1,0 +1,468 @@
+---
+title: "Stat3_BIN_Les12_FS_v1"
+author: "Emile Apol"
+date: "3/27/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+###############################################################################
+#
+# Statistiek 3 BIN
+#
+# 2019-2020
+#
+# Emile Apol 
+#
+# Les 12 - Clustering 1
+#
+###############################################################################
+
+
+###############################################################################
+#
+# Voorbeeld 12.1 - 4 genen en 2 samples
+#
+###############################################################################
+
+```{r}
+myData <- data.frame(M.1 = c(8.0, 7.0, 6.0, 2.0),
+                     M.2 = c(8.0, 8.0, 6.0, 3.0))
+rownames(myData) <- paste0("Gene ",LETTERS[1:4])
+myData
+```
+
+Cluster deze genen o.b.v. Euclidische afstand en "average" linkage. Maak een dendrogram. Hint: het de optie hang=-1 kun je het dendrogram mooier maken, door de "takken" door te laten trekken tot de basis.
+
+```{r}
+dMat  <- dist(myData, method="euclidean")
+clust <- hclust(dMat, method="average")
+plot(clust, xlab="Genen", ylab="Euclidische afstand", hang=-1, sub = "")
+
+
+
+```
+
+
+###############################################################################
+#
+# Voorbeeld 12.2 - 4 genen en 3 samples
+#
+###############################################################################
+
+```{r}
+myData <- data.frame(M.1 = c(8.0, 7.0, 6.0, 2.0),
+                     M.2 = c(8.0, 8.0, 6.0, 3.0),
+                     M.3 = c(2.0, 7.0, 7.0, 8.0))
+rownames(myData) <- paste0("Gene ",LETTERS[1:4])
+myData
+```
+
+Cluster deze genen o.b.v. Euclidische afstand en "average" linkage. Maak een dendrogram. Hint: het de optie hang=-1 kun je het dendrogram mooier maken, door de "takken" door te laten trekken tot de basis.
+
+
+```{r}
+dMat  <- dist(myData, method="euclidean")
+clust <- hclust(dMat, method="average")
+plot(clust, xlab="Genen", ylab="Euclidische afstand", hang=-1, sub = "")
+```
+
+
+###############################################################################
+#
+# Voorbeeld 12.3 - 4 genen en 2 samples, single linkage
+#
+###############################################################################
+
+```{r}
+myData <- data.frame(M.1 = c(8.0, 7.0, 6.0, 2.0),
+                     M.2 = c(8.0, 8.0, 6.0, 3.0))
+rownames(myData) <- paste0("Gene ",LETTERS[1:4])
+myData
+```
+
+Cluster deze genen o.b.v. Euclidische afstand en "single" linkage. Maak een dendrogram. Hint: het de optie hang=-1 kun je het dendrogram mooier maken, door de "takken" door te laten trekken tot de basis.
+
+```{r}
+dMat  <- dist(myData, method="euclidean")
+clust <- hclust(dMat, method="single")
+plot(clust, xlab="Genen", ylab="Euclidische afstand", hang=-1, sub = "")
+
+
+
+```
+
+
+
+
+###############################################################################
+#
+# Voorbeeld 12.4 - Genexpressies en afstandsmaten
+#
+###############################################################################
+
+Bij het hierarchisch clusteren met de functie hclust( ) kun je verschillende afstandsmaten tussen twee items (= genen) i en j gebruiken:
+
+* Euclidische afstand:
+
+  d.ij = sqrt( (y.i.1 - y.j.1)^2 + (y.i.2 - y.j.2)^2 + ... )
+  
+met y.i.k de meetwaarde van item (= gen) i en de k-de meetwaarde (= sample) van dat gen. 
+
+Hierbij is de afstand klein als de waarden van beide items erg op elkaar lijken, en de afstand groot als de waarden van beide items veel van elkaar verschillen. Voor genexpressies: kleine afstand = vergelijkbaar level van genexpressie.
+
+* Pearson of correlatie-afstand:
+
+  d.ij = 1 - r.ij
+  
+waarbij
+
+  r.ij = cor(y.i, y.j)
+  
+de correlatiecoefficient tussen items (= genen) i en j is, een getal tussen -1 (perfecte negatieve correlatie) en +1 (perfecte positieve correlatie). Hierbij is de afstand minimaal (d.w.z. d.ij = 0) als beide items perfect positief gecorreleerd zijn (r.ij = +1, dus bijv. allebei op dezelfde manier toe- of afnemen), dus in "gedrag" erg op elkaar lijken. De afstand is maximaal (d.w.z. d.ij = +2) als beide items perfect negatief gecorreleerd zijn (r.ij = -1, dus het ene item (= gen) neemt af terwijl het andere item juist toeneemt), dus in gedrag elkaars tegenovergestelde zijn. Voor genexpressies: kleine afstand = beide genen worden op dezelfde manier upgereguleerd of beide genen worden op dezelfde manier downgereguleerd.
+
+* Absolute Pearson afstand:
+
+  d.ij = 1 - | r.ij |
+  
+waarbij | r.ij | de absolute waarde van de correlatiecoeffient r.ij tussen items (= genen) i en j is. Hierbij is de afstand minimaal (d.w.z. d.ij = 0) als beide items (= genen) of perfect positief gecorreleerd zijn (d.w.z. r.ij = +1) of perfect negatief gecorreleerd zijn (d.w.z. r.ij = -1), dus zich gekoppeld gedragen. Voor genexpressies: kleine afstand = genen zijn op vergelijkbare manier up- en/of downgereguleerd, dus gekoppeld. Het maakt niet uit of gen i wordt upgereguleerd en gen j downgereguleerd of dat beide genen worden upgereguleerd. De "afstand" is voor beide situaties gelijk. NB. In plaats van de absolute waarde | r.ij | kun je ook het kwadraat van r.ij gebruiken, dus d.ij = 1 - r.ij^2, dat heeft een vergelijkbare betekenis.
+
+
+In de tab-separated textfile “Gene_expressions_ABCD.txt“ (met header) staan de log genexpressies van 4 genen (A, B, C, en D) als voorbeeld. Lees deze data in als dataframe "Genes".
+
+```{r}
+setwd("H:/Hanze/ILST/vakken/kwartaal 07/Statistiek 3 BIN/lessen/2019-2020/Les 12 - Clustering 1/")
+dir()
+Genes <- read.table("Gene_expressions_ABCD.txt", header = T, sep = "\t")
+head(Genes)
+```
+
+Met de functie matplot kunnen we er een geschikte grafiek van maken om het gedrag van de 4 genen in de tijd weer te geven. Hint: matplot gaat ervan uit dat elke regel in het dataframe een nieuw tijdpunt is; in ons dataframe is elke kolom een nieuw tijdpunt, daarom moeten we het dataframe transponeren.
+
+```{r}
+matplot(t(Genes), pch = 19, type = "b", lty = 1, 
+        xlab = "Time", ylab = "Log(gene expression)", axes = F)
+axis(side = 2, at = 0:10)
+axis(side = 1, at = 1:ncol(Genes), labels = colnames(Genes)) 
+legend(x = "top", legend = rownames(Genes), col=as.factor(rownames(Genes)),
+       pch = 19, lty = 1)
+```
+
+a) Welke genen (A, B, C en/of D) lijken qua expressieniveau (gemiddeld over de tijd!) het meest op elkaar?
+
+A en D lijken gemiddeld op elkaar, en B en C lijken gemiddeld qua niveau op elkaar, maar B lijkt wat meer op A+D dan dat C lijkt op A+D.
+
+
+b) Voer hierarchische clustering uit op de genen met Euclidische afstand en average linkage. Maak een dendrogram. Klopt deze clustering met wat je bij a) hebt bedacht?
+
+```{r}
+dMat <- dist(Genes, method = "euclidean")
+clus <- hclust(dMat, method = "average")
+plot(clus, xlab = "Genes", ylab = "Euclidean distance", sub = "",
+     hang = -1)
+```
+
+A en D vormen inderdaad een subcluster, en B lijkt inderdaad meer dan C op deze subcluster.
+
+c) Welke genen (A, B, C en/of D) lijken qua gedrag het meest op elkaar? D.w.z. welke genen worden in de tijd beide upgereguleerd of beide downgereguleerd, of blijven beide constant?
+
+Genen A en B worden beide upgereguleerd, dus lijken qua "gedrag" sterk op elkaar. Gen C wordt juist downgereguleerd, dus heeft de grootste afstand tot A en B.
+
+
+
+d) Voer hierarchische clustering uit op de genen met Pearson afstand en average linkage. Maak een dendrogram. Klopt deze clustering met wat je bij c) hebt bedacht?
+
+```{r}
+dMat <- as.dist(1 - cor(t(Genes)))
+clus <- hclust(dMat, method = "average")
+plot(clus, xlab = "Genes", ylab = "Pearson distance", sub = "",
+     hang = -1)
+```
+
+De clustering klopt met c). Inderdaad hebben A en B de kleinst Pearson afstand, en C de grootste afstand tot A+B.
+
+e) Welke genen (A, B, C en/of D) lijken qua gedrag het meest "gekoppeld"? D.w.z. welke genen worden in de tijd beide upgereguleerd of beide downgereguleerd, of de ene up- en de andere downregeguleerd?
+
+A en B worden beide upgereguleerd, dus zijn gekoppeld, C wordt tegelijkertijd downgereguleerd, dus is ook gekoppeld, maar D blijft min of meer constant, en is dus niet sterk gekoppeld aan A, B en C.
+
+
+f) Voer hierarchische clustering uit op de genen met absolute Pearson afstand en average linkage. Maak een dendrogram. Klopt deze clustering met wat je bij e) hebt bedacht?
+
+```{r}
+dMat <- as.dist(1 - abs(cor(t(Genes))))
+clus <- hclust(dMat, method = "average")
+plot(clus, xlab = "Genes", ylab = "Absolute Pearson distance", sub = "",
+     hang = -1)
+```
+
+Ja, clustering klopt met e).
+
+
+
+###############################################################################
+#
+# Voorbeeld 12.5 - Broodbeleg (1)
+#
+###############################################################################
+
+
+Van bijna al onze etenswaren staat op het etiket de nutrientensamenstelling vermeld. Dit bestaat o.a. uit de hoeveelheid eiwit, suikers, zetmeel, vetten, vezels en natrium per 100 g product. In deze opgave gaan we verschillende soorten broodbeleg (jam, kaas, vlees, vlokken, hagelslag etc.) vergelijken en clusteren op basis van nutrientensamenstelling.
+
+De dataset “Broodbeleg_1.txt” bevat voor 27 verschillende producten o.a. de waarden van de 7 eigenschappen:
+
+  eiwit        = g eiwit per 100 g product
+  kool.suiker  = g suiker per 100 g product
+  kool.anders  = g overige koolhydraten (zetmeel) per 100 g product
+  vet.vz       = g verzadigd vet per 100 g product
+  vet.ov       = g onverzadigd vet per 100 g product
+  vez          = g voedingsvezels per 100 g product
+  Na           = g natrium per 100 g product
+  
+Daarnaast is er o.a. nog een kolom Omschrijving die aangeeft welk product het is (met fabrikant).
+
+a) Lees in R deze tab-separated dataset met header in als dataframe myData.
+
+```{r}
+setwd("H:/Hanze/ILST/vakken/kwartaal 07/Statistiek 3 BIN/lessen/2019-2020/Les 12 - Clustering 1/")
+dir()
+
+myData <- read.table("Broodbeleg_1.txt", header=T)
+
+View(myData)
+head(myData)
+```
+
+
+b) Maak uit dataframe myData een nieuw dataframe M door alleen de 7 bovengenoemde nutrienten (eiwit, kool.suiker, ..., Na) te selecteren, en de "Omschrijving" als rownames te gebruiken. NB. Het is belangrijk om de juiste rownames in het dataframe te hebben wat je wilt gaan clusteren, zodan in het dendrogram elk item duidelijk herkanbaar is!
+
+
+```{r}
+properties <- c("eiwit", "kool.suiker", "kool.anders", "vet.vz", "vet.ov", "vez", "Na" )
+prod.names <- myData$Omschrijving
+
+M <- myData[, properties]
+rownames(M) <- prod.names
+View(M)
+```
+
+c) Maak een boxplot van de hoeveelheid per 100 g voor elk van deze 7 nutrienten. Hint: met de optie las=2 kun je de x-labels draaien, met cex.axis kun je dr grootte van de aslabels veranderen.
+
+```{r}
+boxplot(M, cex.axis=0.8, las=2,
+        ylab = "Gram per 100 gram product") # cex.axis geeft schaling labels, las=2 zorgt dat labels loodrecht op assen staan
+```
+
+
+d) Voer een hiërarchische clustering uit op de 27 soorten broodbeleg op basis van de 7 nutrienten. Gebruik “euclidean” afstanden en “average” linkage. Maak via plot een dendrogram. Je kunt de grootte van de labels aanpassen via cex. Pas de uitlijning van de labels aan via hang=-1.
+
+```{r}
+dMat <- dist(M, method="euclidean")
+clust <- hclust(dMat, method="average")
+
+plot(clust, hang=-1,
+     xlab="Producten", ylab="Afstand (Euclidisch)", sub="",
+     cex=0.7)
+```
+
+e) Er lijken twee grote subclusters te zijn. Wat stellen beide subclusters voor?
+
+De ene subcluster stelt "zoet" broodbeleg voor, de andere subcluster "hartig" broodbeleg!
+
+
+f) Gebruik de functie cutree (zie ppt van Les 13) om twee subclusters te maken. Wat zijn de producten in beide subclusters? 
+
+```{r}
+sc.2 <- cutree(clust, k=2)
+
+cat("Producten in subcluster 1 zijn: ", as.character(prod.names[sc.2==1]), "\n\n")
+cat("Producten in subcluster 2 zijn: ", as.character(prod.names[sc.2==2]), "\n\n")
+
+```
+
+
+
+
+###############################################################################
+#
+# Voorbeeld 12.6 - Broodbeleg (2)
+#
+###############################################################################
+
+
+De dataset “Broodbeleg_2.txt” bevat voor 61 verschillende producten o.a. de waarden van de 7 nutrienten zoals uitgelegd in Voorbeeld 12.5. Herhaal de analyse van Voorbeeld 12.5 met deze dataset. Omdat er nu heel veel producten (en dus labels) zijn kun je in het dendrogram bijv. de grootte van de labels aanpassen via cex. Een andere mogelijkheid is het dendrogram van het clusterobject clust via een speciale library te laten maken.
+
+Installeer daarvoor de packages “ggplot2” en “ggdendro”, activeer de libraries via
+
+library(ggplot2)
+library(ggdendro)
+
+Nu kun je een mooier dendrogram maken via ggdendrogram(clust, rotate=T). 
+
+```{r}
+setwd("H:/Hanze/ILST/vakken/kwartaal 07/Statistiek 3 BIN/lessen/2019-2020/Les 12 - Clustering 1/")
+dir()
+
+myData <- read.table("Broodbeleg_2.txt", header=T)
+
+View(myData)
+head(myData)
+```
+
+```{r}
+properties <- c("eiwit", "kool.suiker", "kool.anders", "vet.vz", "vet.ov", "vez", "Na" )
+prod.names <- myData$Omschrijving
+
+M <- myData[, properties]
+rownames(M) <- prod.names
+View(M)
+```
+
+```{r}
+boxplot(M, cex.axis=0.8, las=2,
+        ylab = "Gram per 100 gram product") # cex.axis geeft schaling labels, las=2 zorgt dat labels loodrecht op assen staan
+```
+
+```{r}
+dMat <- dist(M, method="euclidean")
+clust <- hclust(dMat, method="average")
+
+plot(clust, hang=-1,
+     xlab="Producten", ylab="Afstand (Euclidisch)", sub="",
+     cex=0.7)
+```
+
+OF
+
+```{r}
+library(ggplot2)
+library(ggdendro)
+
+ggdendrogram(clust, rotate=T)#
+```
+
+Opnieuw zien we een clustering van "zoet" en "hartig" beleg...
+
+```{r}
+sc.2 <- cutree(clust, k=2)
+
+cat("Producten in subcluster 1 zijn: ", as.character(prod.names[sc.2==1]), "\n\n")
+cat("Producten in subcluster 2 zijn: ", as.character(prod.names[sc.2==2]), "\n\n")
+
+```
+
+
+
+
+
+
+
+
+###############################################################################
+#
+# Voorbeeld 12.7 - Microarray experiment met 3 zoogdiersoorten
+#
+###############################################################################
+
+In een microarray experiment worden de genexpressies van 3 verschillende zoogdieren (varken = PIG, hond = DOG, en koe = COW) onder stress bepaald. Er worden 4 varkens, 4 honden en 5 katten onderzocht met in totaal 13 dual channel chips, telkens ten opzichte van een vast referentie sample (= stressloos). Voor iedere chip zijn de intensiteiten gecorrigeerd voor de achtergrond, is een log-transformatie toegepast, zijn de log fold-changes M = log2(R/G) bepaald ten opzichte van de stressloze referentie (G), en zijn de data genormaliseerd, d.w.z. gecorrigeerd voor eventuele bias. Het resultaat is een file met daarin voor 2000 genen de log fold-changes M.ik voor soorten i (= PIG, DOG, COW) en replica’s k (= 1..4, 1…4 en
+1…5), dus als kolommen:
+
+PIG.1 PIG.2 PIG.3 PIG.4 DOG.1 … DOG.4 COW.1 … COW.5
+
+Deze data staan in de tab-separated file “MA_mammals.txt”, die een header heeft en de gen-namen als rownames. We willen graag weten of er tussen deze 3 soorten zoogdieren verschillen zijn in de genexpressie ten gevolge van stress.
+
+
+a) Lees in R deze tab-separated dataset met header in als dataframe myData.
+
+```{r}
+setwd("H:/Hanze/ILST/vakken/kwartaal 07/Statistiek 3 BIN/lessen/2019-2020/Les 12 - Clustering 1/")
+dir()
+
+myData <- read.table("MA_mammals.txt", header=T, sep="\t")
+head(myData)
+```
+
+b) Wat voor soort statistische toets is geschikt om voor deze data te bepalen of er een significant verschil is in expressie tussen de 3 zoogdiersoorten. Leg uit.
+
+Een 1-way ANOVA, want er zijn per gen 3 groepen om te vergelijken; we hebben wel een 2-channel MA gebruikt, maar per MA al een logfoldwaarde M berekend (dus dit is de gepaarde data!). In termen van de logfoldwaarden M zijn er gewoon 4, 4 en 5 replica's gemeten!
+
+
+c) Maak in R een eigen functie die per gen (= regel in je dataframe) een p-waarde uitrekent voor de toets die je bij b. hebt bedacht.
+
+```{r}
+myANOVA <- function(x,g){
+  return(summary(aov(x ~ g))[[1]]$Pr[1])
+}
+```
+
+d) Voer de toets uit met alpha = 0.05. Hoeveel genen zijn significant? Welke genen zijn dit?
+
+```{r}
+n.rep.PIG <- 4; n.rep.DOG <- 4; n.rep.COW <- 5 
+g <- factor(c(rep("PIG", n.rep.PIG), rep("DOG", n.rep.DOG), rep("COW", n.rep.COW)))
+
+pVals <- apply(myData, 1, myANOVA, g)
+
+alpha <- 0.05
+
+cat("\n\nAantal significante genen: ",sum(pVals < alpha),"\n")
+cat("\nSignificante genen: ", rownames(myData)[pVals < alpha],"\n")
+```
+
+e) Hoeveel vals positieve uitslagen verwacht je in dit geval?
+
+0.05 * 2000 = 100 vals positieve uitslagen...
+
+
+
+f) Voer een multiple testing correctie uit op de p-waarden. Gebruik hiervoor de FDR-methode. Hoeveel genen zijn significant? Welke genen zijn dit?
+
+```{r}
+pVals.fdr <- p.adjust(pVals, method="fdr")
+
+cat("\n\nAantal significante genen: ", sum(pVals.fdr < alpha),"\n")
+cat("\nSignificante genen: ", rownames(myData)[pVals.fdr < alpha],"\n")
+
+```
+
+g) Maak een nieuw dataframe MA.DEG met daarin alléén de bij f. gevonden significante genen (DEG’s).
+
+```{r}
+# Vector met alleen de DEG's erin:
+myDEGs <- rownames(myData)[pVals.fdr < alpha]
+
+MA.DEG <- myData[myDEGs,]
+View(MA.DEG)
+
+
+```
+
+h) Voer een hiërarchische clustering uit op de significante genen (DEG’s) op basis van de 13 samples. Gebruik “euclidean” afstanden en “average” linkage. Maak via plot een dendrogram. Je kunt de grootte van de labels eventueelaanpassen via cex. Pas de uitlijning van de labels aan via hang=-1.
+
+```{r}
+dMat <- dist(MA.DEG, method="euclidean")
+clust <- hclust(dMat, method="average")
+plot(clust, hang=-1, xlab="Genes", ylab="Euclidean distance",
+     main="Dendrogram mammal DEG's", sub="")
+```
+
+
+i) Maak met de functie cutree vier subclusters (zie ppt van Les 13). Wat zijn de gen-namen in elke subcluster?
+
+```{r}
+sc.4 <- cutree(clust, k=4)
+
+cat("Subcluster 1 bestaat uit genen: ", myDEGs[sc.4==1],"\n\n")
+cat("Subcluster 2 bestaat uit genen: ", myDEGs[sc.4==2],"\n\n")
+cat("Subcluster 3 bestaat uit genen: ", myDEGs[sc.4==3],"\n\n")
+cat("Subcluster 4 bestaat uit genen: ", myDEGs[sc.4==4],"\n\n")
+
+```
+
+
+
+
+
+

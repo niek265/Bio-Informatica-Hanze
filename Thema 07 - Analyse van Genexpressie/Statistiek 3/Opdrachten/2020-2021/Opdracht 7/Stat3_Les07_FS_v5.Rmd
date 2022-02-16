@@ -1,0 +1,334 @@
+---
+title: "Stat3_Les07_FS_v4"
+author: "Emile Apol"
+date: "9-3-2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+###############################################################################
+#
+# Statistiek 3 BIN
+#
+# 2019-2020
+#
+# Emile Apol 
+#
+# Les 07 - 1-way ANOVA en gepaarde t-toets
+#
+###############################################################################
+
+
+
+###############################################################################
+#
+# Voorbeeld 7.1 - Genexpressie in twee soorten tumoren
+#
+###############################################################################
+
+
+De RNA expressie van een bepaald gen, dat wordt verdacht van betrokkenheid bij twee vormen van kanker, werd bij 18 personen bepaald: 6 gezonde mensen (control), 6 patiënten met de eerste vorm van kanker (tumor.1) en 6 patiënten met de tweede vorm (tumor.2). De data staan in de text file "Les07_expression_2.txt"; deze file is tab-separated en heeft een header.
+
+a) Lees de data in.
+
+```{r}
+getwd()
+setwd("H:/Hanze/ILST/vakken/kwartaal 07/Statistiek 3 BIN/lessen/2019-2020/Les 07 - 1-way ANOVA")
+dir()
+tumoren <- read.table("Les07_expression_2.txt", header=T, sep="\t")
+tumoren
+summary(tumoren)
+```
+
+
+b) Maak een boxplot van genexpressie als functie van het sample = tumorstadium.
+
+```{r}
+boxplot(expr ~ sample, data = tumoren, 
+        xlab="Tumorstadium", ylab="Genexpressie")
+```
+
+
+
+
+c) Welke analyse is geschilt om te onderzoeken of de genexpressie significant afhangt van het tumorstadium?
+
+Een 1-way ANOVA, omdat er 3 groepen zijn.
+
+
+
+d) Onderzoek of de genexpressie significant afhangt van het tumorstadium. Toets met alpha = 0.05.
+
+```{r}
+( res <- summary(aov(expr ~ sample, data=tumoren)) )
+```
+
+p-waarde < 0.05, dus (net) een significant verschil tussen de drie groepen!
+
+
+e) Wat is de effecsterkte eta^2?
+
+```{r}
+SS.A <- res[[1]]$Sum[1]
+SS.tot <- sum(res[[1]]$Sum)
+eta2 <- SS.A / SS.tot
+cat("Effectsterkte: eta2 = ",eta2,"\n")
+```
+
+eta^2 = 0.34, dus VEEL groter dan 0.14, dus een heel sterk effect!
+
+f) Voer een Bonferroni post-hoc toets uit.
+
+```{r}
+source("Homogeneous_subsets_v1.r")
+```
+
+```{r}
+postHocHomSubsets(y = tumoren$expr, g = tumoren$sample, 
+                  p.adjust.method = "bonferroni", alpha=0.05)
+```
+
+Er zijn geen verschillen tussen de groepen...!
+
+
+g) Voer een Tukey post-hoc toets uit.
+
+```{r}
+postHocHomSubsets(y = tumoren$expr, g = tumoren$sample, 
+                  p.adjust.method = "tukey", alpha=0.05)
+```
+
+Er zijn geen verschillen tussen de groepen...!
+
+
+
+h) Voer een FDR post-hoc toets uit.
+
+```{r}
+postHocHomSubsets(y = tumoren$expr, g = tumoren$sample, 
+                  p.adjust.method = "fdr", alpha=0.05)
+```
+
+Er zijn geen verschillen tussen de groepen...!
+
+Alle drie de analyses geven dezelfde uitkomst, namelijk alle groepen gelijk! Omdat de overall 1-way ANOVA NET significant is (p = 0.0465) is er nu een inconsistentie tussen de overall toets en de post-hoc toetsen...
+
+i) Hoe zou je deze inconsistentie tussen ANOVA en post-hoc toetsen kunnen verhelpen?
+
+ Meer patienten per groep bekijken in het experiment: nu 6 per groep, beter 12 of 20 per groep...
+
+
+
+###############################################################################
+#
+# Voorbeeld 7.2 - Opbrengst product en NaOH gebruik
+#
+###############################################################################
+
+Een fabriek produceert een bepaald medicijn. Voor de reactie is ook NaOH als katalysator nodig. Hoewel NaOH een niet erg dure stof is, komt toch de vraag van het management hoeveel NaOH werkelijk nodig is om toch een hoge concentratie van het product (= medicijn, in mM) te krijgen. Onder leiding van de chemisch technoloog wordt een aantal experimenten uitgevoerd, waarbij de concentratie NaOH wordt gevarieerd (0.1 M, 0.5 M, 1.0 M en 1.5 M) en de uiteindelijke concentratie product wordt bepaald. Voor elke NaOH concentratie wordt 5 maal een batch gemaakt. De resultaten zijn staan in het onderstaande dataframe.
+
+```{r}
+myData <- data.frame(medicijn = c(11.7, 13.8, 17.4, 16.9, 15.5, 
+                                  15.8, 17.9, 21.1, 18.8, 17.5, 
+                                  39.7, 34.4, 39.7, 41.0, 35.9, 
+                                  41.3, 43.2, 38.3, 36.7, 42.1),
+                     NaOH = factor(c(rep("0.1 M",5), rep("0.5 M",5), rep("1.0 M",5), rep("1.5 M",5))))
+```
+
+a) Maak een boxplot van concentratie medicijn (in mM) als functie van de concentratie NaOH.
+
+```{r}
+boxplot(medicijn ~ NaOH, data = myData, xlab = "Concentratie katalysator, NaOH", 
+        ylab = "Concentratie medicijn (mM)")
+```
+
+b) Wat voor statistische toets is geschikt om uit te zoeken of de concentratie van het product afhangt van de NaOH concentratie?
+
+Een 1-way ANOVA, want meer dan 2 groepen.
+
+
+c) Hangt de concentratie van het product af van de NaOH concentratie? Toets met alpha = 0.05.
+
+```{r}
+( res <- summary(aov(medicijn ~ NaOH, data = myData)) )
+```
+
+p = 1.09e-11 << 0.05 = alpha, dus NaOH concentratie heeft een significant effect op de concentratie medicijn.
+
+d) Wat is de effectsterkte? Is het effect van NaOH op de concentratie medicijn zwak, matig of sterk?
+
+```{r}
+SS.A <- res[[1]]$Sum[1]
+SS.tot <- sum(res[[1]]$Sum)
+eta2 <- SS.A / SS.tot
+cat("Effectsterkte: eta2 = ",eta2,"\n")
+```
+
+De effectsterkte eta2 = 0.96 >>> 0.14, dus NaOH concentratie heeft een heel sterk effect op de concentratie medicijn.
+
+e) Als er een significant effect is, welke NaOH concentraties geven dan een significant verschillend resultaat? Toets met alpha = 0.05. Vergelijk de Bonferroni methode met de Tukey en fdr methoden.
+
+```{r}
+setwd("E:/Hanze/ILST/vakken/kwartaal 07/Statistiek 3 BIN/lessen/2019-2020/Les 07 - 1-way ANOVA/")
+source("Homogeneous_subsets_v1.r")
+```
+
+```{r}
+postHocHomSubsets(y = myData$medicijn, g = myData$NaOH, 
+                  p.adjust.method = "bonferroni", alpha=0.05)
+```
+
+Bonferroni: 0.1 en 0.5 M NaOH geven zelfde resultaat, ook 1.0 en 1.5 M geven zelfde resultaat.
+
+```{r}
+postHocHomSubsets(y = myData$medicijn, g = myData$NaOH, 
+                  p.adjust.method = "tukey", alpha=0.05)
+```
+
+Zelfde resultaten als Bonferroni.
+
+```{r}
+postHocHomSubsets(y = myData$medicijn, g = myData$NaOH, 
+                  p.adjust.method = "fdr", alpha=0.05)
+```
+
+Zelfde resultaten als Bonferroni en Tukey.
+
+
+f) Om een zo hoog mogelijke concentratie product te krijgen, wat zou jij het management adviseren over de te gebruiken NaOH concentratie?
+
+Uit de gemiddelden is duidelijk dat 1.0 en 1.5 M NaOH de hoogste concentratie product geven.Omdat 1.0 en 1.5 M NaOH statistisch hetzelfde resultaat geven kun je beter kiezen	voor 1.0 M NaOH, omdat dat goedkoper is!						
+
+
+
+###############################################################################
+#
+# Voorbeeld 7.3 - Deeltjesgrootte van poeders
+#
+###############################################################################
+
+De grootte van poederdeeltjes is een belangrijke eigenschap  die o.a. het stromingsgedrag en de “kleverigheid” van poeders bepaalt. De gemiddelde grootte kan gemeten worden door laserdiffractie (Fraunhofer diffractie) of door optical imaging. We willen graag kijken of de resultaten van beide meetmethoden dezelfde resultaten geven of dat er toch een (systematisch) verschil is, d.w.z. een bias. Om dit te onderzoeken wordt voor vijf poedermonsters (samples) telkens de gemiddelde deeltjesgrootte (in mu) bepaald met beide methoden. De resultaten staan in het volgende dataframe.
+
+```{r}
+myData <- data.frame(sample = rep(1:5, 2),
+                     grootte = c(211, 145, 142, 215, 145, 
+                                 279, 214, 185, 300, 175),
+                     methode = factor(c(rep("Laser diffractie", 5), rep("Optical imaging", 5))))
+```
+
+a) Maak een boxplot van deeltjesgrootte als functie van de meetmethode.
+
+```{r}
+boxplot(grootte ~ methode, data = myData, xlab = "Meetmethode", ylab = "Deeltjesgrootte (mu)")
+```
+
+Met de library ggpubr kun je ook voor gepaarde data een mooiere boxplot maken.
+
+```{r}
+install.packages("ggpubr")
+library(ggpubr)
+
+```
+
+```{r}
+newData <- data.frame("Laser diffractie" = myData$grootte[myData$methode %in% "Laser diffractie"],
+                      "Optical imaging" = myData$grootte[myData$methode %in% "Optical imaging"])
+newData
+ggpaired(data = newData, cond1 = "Laser.diffractie", cond2 = "Optical.imaging", xlab = "Methode",
+         ylab = "Deeltjesgrootte (mu)")
+```
+
+
+
+b) Leg uit waarom een gepaarde t-toets het meest geschikt is om uit te zoeken of beide meetmethoden een verschil in deeltjesgrootte opleveren.
+
+De variatie in grootte TUSSEN de samples is hier groter dan de verschillen tussen de methoden. Dus verschillende samples geven extra "ruis" in de data. Deze ruis kun je "wegfilteren" door een gepaarde t-toets uit te voeren!
+
+c) Geven beide meetmethoden een significant verschil in deeltjesgrootte? Toets met alpha = 0.05.
+
+```{r}
+t.test(grootte ~ methode, data = myData, paired = T)
+```
+
+p = 0.0039 < 0.05 = alpha, dus H1: Er is een significant verschil in de resultaten van beide meetmethodes.
+
+d) Bereken de effectsterkt, d.w.z. Cohen's d.av = (y.av.1 - y.av.2)/sqrt((var.1+var.2)/2). Is het verschil tussen beide methoden klein. matig of sterk?
+
+```{r}
+vars <- tapply(myData$grootte, myData$methode, var)
+yavs <- tapply(myData$grootte, myData$methode, mean)
+d.av <- (yavs[1]-yavs[2])/sqrt((vars[1]+vars[2])/2)
+cat("Effectsterkte: d.av = ",d.av,"\n")
+```
+
+| d.av | = 1.23 > 0.8, dus een groot verschil tussen beide methoden.
+
+e) Wat zou de uitkomst van de analyse zijn als je een Welch t-toets zou hebben gebruikt? Probeer het verschil te verklaren.
+
+```{r}
+t.test(grootte ~ methode, data = myData)
+```
+
+p = 0.098 > 0.05 = alpha, dus geen significant verschil tussen beide methoden.
+
+
+
+
+###############################################################################
+#
+# Voorbeeld 7.4 - Stress en oogknipperen
+#
+###############################################################################
+
+Volgens een theorie uit de psychologie heeft stress invloed op het (onbewuste) oogknipperen: de hypothese is dat mensen door stress minder knipperen (en er tussen twee knipperingen dus meer tijd zit), zie Vroon (1995, p. 73). Om dit te testen werden bij 5 beroemde zangers video-opnamen geanalyseerd: er werd in ontspannen situaties en in situaties met stress gemeten hoeveel tijd (in sec) er (gemiddeld) zat tussen twee oogknipperingen. De resultaten staan in het volgende dataframe.
+
+```{r}
+myData <- data.frame(persoon = factor(c("Ali B.", "Beyonce K.", "Christina A.", "David. B.", "Enrique I.")),
+                     tijd = c(5.4, 7.7, 6.1, 8.2, 6.6, 
+                              3.3, 5.5, 3.5, 6.5, 4.7),
+                     stressniveau = factor(c(rep("gestresst", 5), rep("ontspannen", 5))))
+```
+
+a) Maak een goed boxplot van tijd tussen knipperen als functie van stressniveau.
+
+```{r}
+boxplot(tijd ~ stressniveau, data = myData, xlab = "Stressniveau", ylab = "Tijd tussen knipperingen (s)")
+```
+
+of nog fancier:
+
+```{r}
+newData <- data.frame("gestresst" = myData$tijd[myData$stressniveau %in% "gestresst"],
+                      "ontspannen" = myData$tijd[myData$stressniveau %in% "ontspannen"])
+newData
+ggpaired(data = newData, cond1 = "gestresst", cond2 = "ontspannen", xlab = "Stressniveau",
+         ylab = "Tijd tussen knipperingen (s)")
+```
+
+
+
+b) Wat voor statistische toets is geschikt om uit te zoeken of stress inderdaad leidt tot een significante verlenging van de tijd tussen twee knipperingen?
+
+Gepaarde t-toets, want herhaalde meting op zelfde "object" (= persoon) onder andere omstandigheden.
+
+c) Leidt stress inderdaad tot een significante verlenging van de tijd tussen twee knipperingen? Toets met alpha = 0.05.
+
+```{r}
+( res <- t.test(tijd ~ stressniveau, data = myData, paired = T, alternative = "greater") )
+```
+
+p = 7.9e-05 < 0.05, dus H1: Stress leidt tot significant langere tijd tussen knipperingen.
+
+d) Wat is de effectsterkte van stress op oogknipperen?
+
+```{r}
+vars <- tapply(myData$tijd, myData$stressniveau, var)
+yavs <- tapply(myData$tijd, myData$stressniveau, mean)
+d.av <- (yavs[1]-yavs[2])/sqrt((vars[1]+vars[2])/2)
+cat("Effectsterkte: d.av = ",d.av,"\n")
+```
+
+| d.av | >> 0.8, dus een heel sterk effect van stress op tijd tussen knipperingen.
