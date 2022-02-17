@@ -23,10 +23,10 @@ library(scales)
 myColors <- hue_pal()(12)
 
 plotDensity(log2(data + 0.1), col=rep(myColors, each=3),
-            lty=c(1:ncol(data)), xlab="Log2(count)",
+            lty= seq_len(ncol(data)), xlab="Log2(count)",
             main="Expression Distribution")
 
-legend('topright', names(data), lty=c(1:ncol(data)),
+legend('topright', names(data), lty= seq_len(ncol(data)),
        col=rep(myColors, each=3),
        cex=0.32)  # Fix scale for knitted output
 abline(v=-1.5, lwd=1, col='red', lty=2)
