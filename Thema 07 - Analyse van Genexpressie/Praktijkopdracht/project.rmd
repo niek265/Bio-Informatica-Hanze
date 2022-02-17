@@ -2,12 +2,12 @@
 title: "Analysis of Gene Expression"
 subtitle: "Transcriptional signature of prion-induced neurotoxicity in a Drosophila model of transmissible mammalian prion disease"
 author: Niek Scholten
-date: 10-05-21
+date: 07-05-22
 output: pdf_document
 ---
 
 ```{r read-data, echo = T, results = 'hide'}
-setwd("/home/nieks/Documents/Bio-Informatica/Thema 07 - Analyse van Genexpressie/Praktijkopdracht")
+setwd("/home/nieks/PycharmProjects/Bio-Informatica-Hanze/Thema 07 - Analyse van Genexpressie/Praktijkopdracht")
 data <- read.table("Data/GSE144028.txt")
 ```
 
