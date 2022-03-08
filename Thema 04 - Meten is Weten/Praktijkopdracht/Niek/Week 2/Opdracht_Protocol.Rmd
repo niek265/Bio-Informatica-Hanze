@@ -1,0 +1,42 @@
+---
+title: "Opdracht_Protocol"
+author: "Niek Scholten"
+date: "May 7, 2019"
+output: pdf_document
+---
+
+## Doel
+Onze onderzoeksvraag is:  
+
+* 'Heeft het gebruik van sociale media negatieve effecten op het sociale leven van een student?'  
+
+De hypotheses die we gaan testen zijn als volgt:  
+
+* 'Het gebruik van sociale media heeft negatieve effecten op het sociale leven van een student.' 
+
+* 'Het gebruik van sociale media heeft geen negatieve effecten op het sociale leven van een student.' 
+
+* 'Het gebruik van sociale media heeft positieve effecten op het sociale leven van een student.' 
+
+* 'Het gebruik van sociale media heeft geen positieve effecten op het sociale leven van een student.' 
+
+## Materialen
+We hebben verschillende mensen nodig, het liefst een zo groot mogeljke groep.
+Om tot onze resultaten te komen gaan we een enquête gebruiken.
+
+## Methode
+We gaan de enquête naar verschillende medestudenten sturen, en ze vragen of ze de enquête door willen sturen naar andere studenten. Zo hopen we een zo veel mogelijk reacties te krijgen.
+
+## Eventuele controles
+Wegaan geen verandering meten, dus een controleproef is niet nodig.
+
+## Data interpretatie/Statistische testen
+De data gaan we weergeven in verschillende staaf en cirkeldiagrammen.
+Misschien ook een lijndiagram om een trend weer te geven en die te extrapoleren.
+
+
+
+
+
+
+

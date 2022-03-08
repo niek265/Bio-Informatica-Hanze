@@ -1,0 +1,70 @@
+---
+title: "Opdracht_Protocol"
+author: "Niek Scholten, Jelle Becirspahic, Micha Beens"
+date: "May 7, 2019"
+output: pdf_document
+---
+
+## Doel
+In ons onderzoek gaan we kijken of sociale media negatieve effecten heeft op het sociale leven van studenten.
+Daarom hebben de volgende onderzoeksvraag opgesteld:  
+
+* 'Heeft het gebruik van sociale media negatieve effecten op het sociale leven van een student?'  
+
+De hypotheses die we gaan testen zijn als volgt:  
+
+* 'Het gebruik van sociale media heeft negatieve effecten op het sociale leven van een student.' 
+
+* 'Het gebruik van sociale media heeft geen negatieve effecten op het sociale leven van een student.' 
+
+* 'Het gebruik van sociale media heeft positieve effecten op het sociale leven van een student.' 
+
+* 'Het gebruik van sociale media heeft geen positieve effecten op het sociale leven van een student.' 
+
+## Materialen
+We hebben verschillende mensen nodig, het liefst een zo groot mogelijke groep.
+Om tot onze resultaten te komen gaan we een enquête gebruiken.
+
+## Methode
+We gaan de enquête naar verschillende medestudenten sturen, en ze vragen of ze de enquête door willen sturen naar andere studenten. Zo hopen we een zo veel mogelijk reacties te krijgen.
+
+## Eventuele controles
+We gaan geen verandering meten, dus een controleproef is niet nodig.
+
+## Data interpretatie/Statistische testen
+De data gaan we weergeven in verschillende staaf en cirkeldiagrammen om de verschillen in data te visualiseren.
+Ook een lijndiagram een trend weer te geven en die te extrapoleren.
+  
+\newpage  
+
+# Feedback  
+
+### Doel
+Het doel is duidelijk. Hypotheses zijn goed en duidelijk opgesteld.
+Wat beter kan is het begin, dit ziet er beter uit in een verhaal vorm.
+Het begin: "onze onderzoeksvraag is...." is dus niet goed.
+
+### Materialen
+De materialen die nodig zijn, zijn duidelijk en compleet.
+Hier is niks op aan te merken.
+
+### Methode
+Methode is ook duidelijk en compleet.
+
+### Eventuele controles
+N.V.T
+
+### Data interpretatie
+De Data interpretatie is niet helemaal duidelijk.
+Hoe zien de schalen eruit? wordt de cirkeldiagram opgedeeld in de 4 hypotheses of met een schaal van 1 tot 10 etc.
+Ook het gebruik van het woord "misschien is niet handig."
+
+### Overig
+Spelfouten.
+
+
+
+
+
+
+

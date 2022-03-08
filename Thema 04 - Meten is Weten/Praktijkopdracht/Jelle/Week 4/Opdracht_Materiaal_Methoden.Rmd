@@ -1,0 +1,20 @@
+---
+title: "Materiaal & Methoden"
+author: "Jelle Becirspahic, Niek Scholten, Micha Beens"
+date: "May 20, 2019"
+output: pdf_document
+---
+
+###Materiaal  
+Voor het verkrijgen van de data is gebruik gemaakt van een enquête in de Google forms applicatie waarna de data is geëxporteerd in een .csv bestand.  
+
+De enquête bestaat uit meerdere secties om per sociaal medium te kijken hoeveel en hoe het gebruikt wordt. Ook zijn er verscheidene secties over hoeveel sociale interacties studenten aangaan buiten sociale media om en hoe belangrijk zij dat vinden.  
+
+*Voor de gehele enquête, zie de bijlage.*
+
+###Methoden
+Voordat de enquête was verstuurd is deze getest door mede studenten om eventuele feedback te krijgen en de enquête te optimaliseren.  
+
+Om genoeg data te verzamelen was de enquête verstuurd naar studenten van verschillende instituten en leeftijden.
+
+Omdat Google forms automatisch de data in een .csv bestand omzet kon de data gelijk in RStudio geïmporteerd worden.

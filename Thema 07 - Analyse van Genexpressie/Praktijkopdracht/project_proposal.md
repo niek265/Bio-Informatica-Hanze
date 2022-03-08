@@ -6,7 +6,7 @@ Dit project gaat over het effect van door prionen veroorzaakte neurotoxiciteit o
 Specifiek op Drosophila Melanogaster in dit geval.  
 
 De Drosophila zijn in het larve stadium blootgesteld aan hersenweefsel van schapen,  
-de ene populatie werd blootgesteld aan weefsel van schapen die Scrapie hadden, en de andere aan eefsel van schapen die geen Scrapie hadden.  
+de ene populatie werd blootgesteld aan weefsel van schapen die Scrapie hadden, en de andere aan weefsel van schapen die geen Scrapie hadden.  
 Bij het uitgroeien van de larve tot een vlieg, werden ze gehouden in buisjes.  
 Na 5, 30 of 40 dagen werden ze geëuthanaseerd en onthoofd voor RNA-extractie.  
 

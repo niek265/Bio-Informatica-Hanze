@@ -1,0 +1,141 @@
+---
+title: "Opdracht_Uitvoering"
+author: "Micha Snippe"
+date: "15-5-2019"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r, include=FALSE}
+# Data set inlezen
+library(readr)
+Onderzoek_Antwoorden <- read_csv("Downloads/Social media (Antwoorden) - Formulierreacties 1.csv")
+```
+
+##Data verzamelen
+Om de data te verkrijgen die we nodig hadden hebben we een google form enquete gebruikt die we zelf inelkaar hadden gezet. Deze enquete bevat vragen over hoe mensen sociale media gebruiken en wat ze er van vinden, ook bevat het vragen om een beeld te scheppen hoe sociaal ze zijn IRL.
+
+##Missende data
+Aangezien sommige antwoorden, vragen uitsluiten aangezien ze niet van toepassing zijn bevind er in onze datazet missende data. Deze missende data gaan we waarscheinlijk negeren aangezien deze niet van toepassing waren voor de persoon die de enquete had ingevuld.
+
+##Start uitwerking deelvragen
+*Hoeveel wordt sociale media gebruikt?*  
+Om de gegevens weet te geven voor deze vraag gebruiken we een staaf diagram met de vijf grote sociale media platformen plus een sectie met de overige platformen waar de hoogte weergeeft hoeveel tijd er gemiddeld voor het sociale platform wordt gebruikt.
+```{r, include = FALSE}
+time_insta <- factor(Onderzoek_Antwoorden$`How much time do you spend on this platform daily?`, levels = c("0 to 1 hour(s)", "1 to 2 hours", "3 to 4 hours", "4 to 5 hours", "5 to 6 hours", ">6 hours"))
+
+time_fb <- factor(Onderzoek_Antwoorden$`How much time do you spend on this platform daily?_1`, levels = c("0 to 1 hour(s)", "1 to 2 hours", "3 to 4 hours", "4 to 5 hours", "5 to 6 hours", ">6 hours"))
+
+time_whatsapp <- factor(Onderzoek_Antwoorden$`How much time do you spend on this platform daily?_2`, levels = c("0 - 30 minutes", "30 minutes - 1 hour", "1 - 1.5 hours", "1.5 - 2 hours", "2 - 2.5 hours", ">3 hours"))
+
+time_twitter <- factor(Onderzoek_Antwoorden$`How much time do you spend on this platform daily?_3`, levels = c("0 to 1 hour(s)", "1 to 2 hours", "3 to 4 hours", "4 to 5 hours", "5 to 6 hours", ">6 hours"))
+
+time_snap <- factor(Onderzoek_Antwoorden$`How much time do you spend on this platform daily?_4`, levels = c("0 to 1 hour(s)", "1 to 2 hours", "3 to 4 hours", "4 to 5 hours", "5 to 6 hours", ">6 hours"))
+
+time_disc <- factor(Onderzoek_Antwoorden$`How much time, on average, do you spend on these platforms daily?`, levels = c("< 1 hour", "1 - 2 hours", "2 - 3 hours", "3 - 4 hours", "5 - 6 hours", "> 6 hours"))
+
+time_overig <- factor(Onderzoek_Antwoorden$`How much time, on average, do you spend on these social platforms on a daily basis?`, levels = c("0 - 30 minutes", "30 minutes - 1 hour", "1 - 1.5 hours", "1.5 - 2 hours", "2 - 3 hours", "3 - 4 hours", "4 - 5 hours", ">5 hours"))
+```
+
+**Instagram**
+```{r}
+# Instagram
+barplot(table(time_insta),
+        main = "The time people spend on instagram on a daily basis",
+        col = rainbow(6),
+        cex.names = .8, 
+        ylim = c(0, max(table(time_insta)) + 5),
+        xlab = "Time Spend using the social platform",
+        ylab = "Frequentie"
+        )
+```
+
+**Facebook**
+```{r}
+# Facebook
+barplot(table(time_fb),
+        main = "The time people spend on facebook on a daily basis",
+        col = rainbow(6),
+        cex.names = .8, 
+        ylim = c(0, max(table(time_fb)) + 5),
+        xlab = "Time Spend using the social platform",
+        ylab = "Frequentie"
+        )
+```
+
+**Whatsapp**
+```{r}
+# Whatsapp
+barplot(table(time_whatsapp),
+        main = "The time people spend on Whatsapp on a daily basis",
+        col = rainbow(6),
+        cex.names = .8, 
+        ylim = c(0, max(table(time_whatsapp)) + 5),
+        xlab = "Time Spend using the social platform",
+        ylab = "Frequentie"
+        )
+```
+
+**Twitter**
+```{r}
+# Twitter
+barplot(table(time_twitter),
+        main = "The time people spend on Twitter on a daily basis",
+        col = rainbow(6),
+        cex.names = .8, 
+        ylim = c(0, max(table(time_twitter)) + 5),
+        xlab = "Time Spend using the social platform",
+        ylab = "Frequentie"
+        )
+```
+
+**Snapchat**
+```{r}
+# Snapchat
+barplot(table(time_snap),
+        main = "The time people spend on Snapchat on a daily basis",
+        col = rainbow(6),
+        cex.names = .8, 
+        ylim = c(0, max(table(time_snap)) + 5),
+        xlab = "Time Spend using the social platform",
+        ylab = "Frequentie"
+        )
+```
+
+**Discord, Teamspeak en Skype**
+```{r}
+#Discord, Teamspeak, Skype
+barplot(table(time_disc),
+        main = "The time people spend on Discord, Teamspeak and Skype on a daily basis",
+        col = rainbow(6),
+        cex.names = .8, 
+        ylim = c(0, max(table(time_disc)) + 5),
+        xlab = "Time Spend using the social platform",
+        ylab = "Frequentie"
+        )
+```
+**Overige Platvormen**
+```{r}
+#Overige
+barplot(table(time_overig),
+        main = "The time people spend on the other platforms on a daily basis",
+        col = rainbow(8),
+        cex.names = .6, 
+        ylim = c(0, max(table(time_overig)) + 5),
+        xlab = "Time Spend using the social platform",
+        ylab = "Frequentie"
+        )
+```
+
+**Gemiddelde per platvorm en gemiddelde totaal van elk platform**
+```{r}
+time_insta <- c(time_insta)
+time_insta[time_insta == 1] <- 0.5
+time_insta[time_insta == 2] <- 1.5
+time_insta[time_insta == 3] <- 2.5
+cat("De gemiddelde tijd besteed in instagram:", mean(time_insta, na.rm = TRUE), "uur")
+```

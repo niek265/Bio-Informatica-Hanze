@@ -1,0 +1,56 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r import_onderzoek_data, include=FALSE}
+# Data set inlezen
+library(readr)
+Onderzoek_Antwoorden <- read.csv("Social media (Antwoorden) - Formulierreacties 1.csv", 
+                                 as.is = c("What.is.your.age.", 
+                                           "What.other.social.media.platforms.do.you.use."))
+```
+
+###Wat is het verschil in sociale media gebruik tussen de leeftijden?  
+Om hier antwoord op te geven gebruiken we een staaf diagram die weergeeft hoeveel tijd er gestoken wordt in sociale media voor elke leeftijd van <16 tot >30 in stappen van 1.  
+
+```{r plot_sociale_media_per_leeftijd}
+# Verzamel alle leeftijden 
+age <- as.numeric(Onderzoek_Antwoorden$What.is.your.age.)
+
+# Een vector die alle leeftijden bevat die gemeten zijn van min tot max
+age_range <- min(age, na.rm = T):max(age, na.rm = T)
+
+# Loop door elk platform heen
+for (platform in names(time_list.numeric)){
+  
+  # Lege vector voor de gemiddelden van het platform
+  average_time_per_age <- numeric(0)
+  
+  # Loop door alle leeftijden
+  for(num in age_range){
+    # Bereken het gemiddelde tijd besteed op het platform
+    gem <- mean(time_list.numeric[[platform]][age == num], na.rm = T)
+    
+    # Zet het gemiddelde in de container vector
+    average_time_per_age <- c(average_time_per_age, gem)
+    
+    # Log het gemiddelde
+    #cat("The average time spent by", num, "year olds on this platform is", gem, "uur\n")
+    rm(num, gem)
+  }
+  
+  # Plot de gemiddelde tijd besteed voor elke leeftijd
+  plot(age_range, average_time_per_age, type = "h", 
+       lwd = 15,
+       main = paste("Average time spent on ", platform, " per age"),
+       xlab = "Age [years]",
+       ylab = "Time spent on the platform [hours]",
+       col = rainbow(max(age, na.rm = T) - min(age, na.rm = T) + 1)
+       )
+  
+  rm(platform, average_time_per_age)
+}
+
+rm(age, age_range)
+```

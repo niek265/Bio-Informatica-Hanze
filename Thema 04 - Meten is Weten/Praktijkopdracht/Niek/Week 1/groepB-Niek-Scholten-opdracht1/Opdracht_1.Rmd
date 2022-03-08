@@ -1,0 +1,59 @@
+---
+title: "Opdracht_1"
+author: "Niek Scholten"
+date: "April 24, 2019"
+output:
+  word_document: default
+  pdf_document: default
+---
+
+### Tabel
+Table Header  | Second Header
+------------- | -------------
+1             | Een       
+2             | *Twee*      
+3             | **Drie**
+4             | Vier
+5             | Vijf
+
+\tableofcontents
+
+### Gedicht
+>Ik zit me voor het raam  
+stierlijk te vervelen  
+ik wou dat ik twee hondjes was  
+dan kon ik samen spelen!  
+
+![dog](dog.jpg)
+
+### Opdracht 3
+
+Nee, bij geen kennis kan je dit niet bepalen
+
+### Opdracht 4A
+
+a: Ontduiken van bewijslast  
+b: Bewijs per intimidatie  
+c: Ontduiken van bewijslast  
+d: Persoonlijke aanval  
+
+### Opdracht 4B
+
+
+
+### Opdracht 5
+a: Slecht, niet beinvloedbare variabelen in de vraag  
+b: Slecht, bevat een mening  
+c: Slecht, er is te veel variatie in rassen om rekening mee te houden  
+
+### Opdracht 6
+
+‘Zijn alle raven zwart?’ is beter, je kan namelijk zoeken naar een niet zwarte raaf.  
+Bij de andere vraag moet je zoeken naar specifiek een witte raaf.
+
+### Opdracht 7
+
+Wat is het effect van sociale media op de hoeveelheid sociaal contact in het echte leven?
+
+Ik denk dat er wel degelijk een meetbaar verband gelegd kan worden tussen deze dingen.  
+Het belang van sociale media groeit snel en ik ben benieuw hoeveel effect het zal hebben.

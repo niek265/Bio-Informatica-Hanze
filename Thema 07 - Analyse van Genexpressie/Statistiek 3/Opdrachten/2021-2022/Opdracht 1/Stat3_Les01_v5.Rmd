@@ -1,4 +1,4 @@
----
+    ---
 title: "Stat3_Les01_v4"
 output: html_document
 ---
@@ -41,25 +41,25 @@ hist(L, xlab = "Lengte (cm)", ylab = "Frequentie", main = "Lengte van 10-jarige 
 b) Wat is de gemiddelde lengte, wat is de standaarddeviatie?
 
 ```{r}
-y.av = mean(L)
-s = sd(L)
+y.av <- mean(L)
+s <- sd(L)
 cat("Gemiddelde = ",y.av,", standaarddeviatie = ",s)
 ```
 
 c) Stel, we hadden *nog* meer data gehad:
 
 ```{r}
-L = c(129, 139, 124, 133, 135, 
-      120, 138, 133, 132, 128,
-      129, 132, 133, 135, 134, 
-      141, 134, 136, 131, 132,
-      127, 138, 135, 129, 137)
+L <- c(129, 139, 124, 133, 135,
+       120, 138, 133, 132, 128,
+       129, 132, 133, 135, 134,
+       141, 134, 136, 131, 132,
+       127, 138, 135, 129, 137)
 ```
 
 Maak opnieuw een histogram.
 
 ```{r}
-
+hist(L, xlab = "Lengte (cm)", ylab = "Frequentie", main = "Lengte van 10-jarige Groningers")
 ```
 
 ============================= INTERMEZZO NORMAALVERDELING ==============================
@@ -69,8 +69,8 @@ Dit histogram lijkt op een normaalverdeling. In R kun je de kansverdeling plotte
 ```{r}
 mu <- 0
 sigma <- 1
-x = seq(-3, 3, 0.01)
-f = dnorm(x, 0, 1)
+x <- seq(-3, 3, 0.01)
+f <- dnorm(x, 0, 1)
 
 plot(x, f, xlab="y-waarde", ylab="Probability f(y)", type="l", col="red")
 ```
@@ -133,18 +133,18 @@ Een 95% BetrouwbaarheidsInterval (= 95% BI) is het gebied van 95% rondom het gem
 mu <- 130
 sigma <- 5
 
-lower = qnorm(0.025, mu, sigma)
-upper = qnorm(0.975, mu, sigma)
+lower <- qnorm(0.025, mu, sigma)
+upper <- qnorm(0.975, mu, sigma)
 
 cat("95% BI = [", lower, ", ", upper,"] cm\n")
 ```
 
 ```{r}
 # Wat als je een andere zekerheid, bijv. 90% of 50% wilt?
-zekerheid = 0.50
+zekerheid <- 0.50
 
-lower = y.av + qnorm((1-zekerheid)/2,0,1)*s/sqrt(n)
-upper = y.av + qnorm(1-(1-zekerheid)/2, 0, 1)*s/sqrt(n)
+lower <- y.av + qnorm((1-zekerheid)/2, 0, 1)*s/sqrt(n)
+upper <- y.av + qnorm(1-(1-zekerheid)/2, 0, 1)*s/sqrt(n)
 
 cat("95% BI = [", lower, ", ", upper,"] cm\n")
 ```

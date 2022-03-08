@@ -1,0 +1,4 @@
+fastqc
+samtools
+hisat2
+cutadapt

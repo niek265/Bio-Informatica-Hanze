@@ -1,0 +1,30 @@
+---
+title: "Opdracht_2"
+author: "Niek Scholten"
+date: "May 6, 2019"
+output: pdf_document
+---
+
+\tableofcontents
+
+### Opdracht 1:
+Heeft het gebruik van sociale media negatieve effecten op het sociale leven van een student?
+
+### Opdracht 2: 
+1. Beschrijvend onderzoek
+  + Hoeveel wordt sociale media gebruikt onder studenten?  
+2. Vergelijkend onderzoek
+  + Wat is het verschil in gebruik tussen verschillende leeftijden?  
+3. Definiërend onderzoek
+  + Wat zijn onderdelen van het sociale leven van een student?  
+4. Evaluerend, normatief onderzoek
+  + Hoe belangrijk vindt een student sociale media?  
+5. Verklarend, explorerend onderzoek
+  + Wat is de oorzaak van de significantie van sociale media voor een student?  
+6. Voorspellend onderzoek
+  + Zal het gebruik van sociale media veranderen naarmate een student ouder wordt?  
+7. Ontwerpend, probleemoplossend en adviserend onderzoek
+  + Hoe zijn de negatieve effecten van sociale media te minimaliseren?  
+8. Toetsend onderzoek
+  + Geeft de geïnvesteerde tijd in sociale media voldoening?  
+  

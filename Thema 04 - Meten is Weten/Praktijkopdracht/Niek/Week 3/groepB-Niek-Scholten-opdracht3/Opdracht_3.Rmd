@@ -1,0 +1,99 @@
+---
+title: "Opdracht 3"
+author: "Niek Scholten"
+date: "May 15, 2019"
+output: pdf_document
+---
+
+*Opdracht 1*
+Done
+
+*Opdracht 2*
+Bij session en dan bij working directory. of met:
+```{r}
+getwd()
+```
+
+*Opdracht 3*
+```{r}
+read.csv('Week3_opdracht2.csv', header = TRUE)
+```
+
+*Opdracht 4*
+Factoren zijn de gegevensobjecten die worden gebruikt om de gegevens te categoriseren en op te slaan als niveaus.
+
+*Opdracht 5*
+```{r}
+read.csv('Week3_opdracht2.csv', header = TRUE)
+```
+
+*Opdracht 6*
+```{r}
+file = read.csv('Week3_opdracht6.csv', header = TRUE)
+```
+Er mist data in dit bestand.
+
+\newpage
+
+*Opdracht 7*
+```{r}
+age = file[, 3]
+income = file[, 5]
+
+par(mfrow=c(2,2))
+plot(age, income, 
+     type = "b", 
+     col = "Red", 
+     xlab = "Age", 
+     ylab = "Income", 
+     main = "Age and income")
+hist(income, 
+     xlab = "Income", 
+     ylab = "Frequency", 
+     breaks = 2, 
+     col = "Green",
+     main = "Income frequency")
+boxplot(age, 
+        col = "Yellow", 
+        border = "Black", 
+        ylab = "Age", 
+        main = "Boxplot of age")
+city = file[, 4]
+plot(city, 
+     col ="Blue", 
+     ylab ="Frequency",
+     ylim = c(0,4),
+     las = 3, 
+     main = "Frequency per city")
+
+```
+
+*Opdracht 8*
+```{r}
+cat("| Rijen: ", nrow(file), "| Kolommen: ", ncol(file), " |")
+```
+
+*Opdracht 9*
+```{r}
+cat("The maximum income is: ", max(income, na.rm = TRUE), "\n")
+cat("The minimum income is: ", min(income, na.rm = TRUE), "\n")
+cat("The average income is: ", round(mean(income, na.rm = TRUE), 0), "\n\n")
+
+cat("The maximum age is: ", max(age, na.rm = TRUE), "\n")
+cat("The minimum age is: ", min(age, na.rm = TRUE), "\n")
+cat("The average age is: ", round(mean(age, na.rm = TRUE), 0))
+
+```
+
+\newpage
+
+*Opdracht 10*
+```{r}
+summary(file)
+```
+
+
+
+
+
+

@@ -1,0 +1,49 @@
+---
+title: "R Notebook"
+output: pdf
+author: "Jelle Becirspahic"
+---
+
+
+*Geeft het gebruik van sociale media genoeg voldoening om de tijd investering te rechtvaardigen?*
+```{r content use data prep, child="Social_media.csv"}
+Onderzoek_Antwoorden <- read.csv("Social_media.csv", as.is = c("What.other.social.media.platforms.do.you.use."))
+
+content_insta <- Onderzoek_Antwoorden$Are.you.content.with.the.time.you.put.into.this.platform.
+content_facebook <- Onderzoek_Antwoorden$Are.you.content.with.the.time.you.put.into.this.platform..1
+content_whatsapp <- Onderzoek_Antwoorden$Are.you.content.with.the.time.you.put.into.this.platform..2
+content_twitter <- Onderzoek_Antwoorden$Are.you.content.with.the.time.you.put.into.this.platform..3
+content_snapchat <- Onderzoek_Antwoorden$Are.you.content.with.the.time.you.put.into.this.platform..4
+
+
+content_insta.logical <- c(TRUE, FALSE)[factor(content_insta, levels = c("Yes", "No"))]
+content_facebook.logical <- c(TRUE, FALSE)[factor(content_facebook, levels = c("Yes", "No"))]
+content_whatsapp.logical <- c(TRUE, FALSE)[factor(content_whatsapp, levels = c("Yes", "No"))]
+content_twitter.logical <- c(TRUE, FALSE)[factor(content_twitter, levels = c("Yes", "No"))]
+content_snapchat.logical <- c(TRUE, FALSE)[factor(content_snapchat, levels = c("Yes", "No"))]
+
+calc_percentage <- function(x, y){
+  content_yes <- sum(x[y == "Yes"])/length(na.omit(x))*100
+  content_no <- length(x[y == "No"])/ length(na.omit(x))*100
+  return(c(content_yes, content_no))
+}
+
+content.data <-
+c(calc_percentage(content_insta.logical, content_insta), calc_percentage(content_facebook.logical, content_facebook), calc_percentage(content_whatsapp.logical, content_whatsapp), calc_percentage(content_twitter.logical, content_twitter), calc_percentage(content_snapchat.logical, content_snapchat))
+
+perc.content.matrix <- matrix(content.data,  nrow = 2, ncol = 5)
+colnames(perc.content.matrix) <- c("Instagram", "Facebook", "Whatsapp", "Twitter", "Snapchat")
+rownames(perc.content.matrix) <- c("Yes", "No")
+
+par(mar=c(5, 4, 4, 4))
+barplot(perc.content.matrix,
+        col=c("Green", "Red"),
+        las=2, beside = T,
+        ylim = c(0, 100),
+        ylab = "Percentage",
+        main = "Percentage of users who are content with \n their social media usage, per social medium.")
+legend(x = 1, y = 102, legend = rownames(perc.content.matrix), col=c("Green", "Red"), pch = 15, cex = 0.55)
+```
+
+Zoals te zien is in de figuur is het merendeel van de gebruikers tevreden over hun gebruik. Dit zou het gebruik kunnen rechtvaardigen voor de mensen die tevreden zijn met hun gebruik en sociale media als belangrijk zien.
+

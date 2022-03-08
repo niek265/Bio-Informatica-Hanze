@@ -1,0 +1,78 @@
+---
+title: "Opdracht_2"
+author: "Micha Beens"
+date: "May 6, 2019"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+**Onderzoeksvraag**  
+Wat is de invloed van sociale media op het sociale leven van een student?
+
+**Vraag typen**  
+*Beschrijvend onderzoek*	Wat zijn de kenmerken? Wie moet dit uitvoeren? Hoe ziet het eruit?  
+
+*Vergelijkend onderzoek*	Wat zijn de verschillen? Wat zijn de overeenkomsten? In welke opzichten zijn ze anders? Op welke punten lijken ze op elkaar?  
+
+*Definiërend onderzoek*	In welk stadium zit de ontwikkeling? Hoe kan het getypeerd worden? Waar is het een voorbeeld van? Hoort het hierin thuis?  
+
+*Evaluerend, normatief onderzoek*	Wat zijn de positieve punten? Wat is de waarde ervan? Hoe goed werkt het? Hoe geschikt is het? Hoe wenselijk is…? Wat zijn voordelen of nadelen?  
+
+*Verklarend, explorerend onderzoek*	Waar is dit een gevolg van? Hoe komt dat? Wat zijn de oorzaken?  
+
+*Voorspellend onderzoek*	In welke mate zal? Waar zal dat toe leiden? Zal in de toekomst? Waar moet organisatie X op zijn voorbereid?  
+
+*Ontwerpend, probleemoplossend en adviserend onderzoek*	Hoe kan ervoor gezorgd worden dat…? Hoe moet…? Wat kan er gedaan worden om dit op te lossen?  
+
+*Toetsend onderzoek* Zijn jongens sneller dan meisjes? Welk effect heeft….op….?  
+  
+**Bedachte vragen**  
+*Beschrijvend onderzoek*  
+Hoeveel wordt sociale media gebruikt?  
+
+*Vergelijkend onderzoek*  
+Wat is het verschil in sociale media gebruik tussen de leeftijden?  
+Wat is het verschil in sociale media gebruik tussen de sekses?
+
+*Definiërend onderzoek*	 
+Wat zijn onderdelen van het sociale leven van een student?  
+
+*Evaluerend, normatief onderzoek*  
+Hoe belangrijk vind een student sociale media?  
+
+*Verklarend, explorerend onderzoek*  
+Waarom is sociale media belangrijk voor een student?  
+Wat is de oorzaak van de signivicantie van sociale media van een student?  
+
+*Voorspellend onderzoek*  
+Gaat het gebruik van sociale media veranderen naarmate de leeftijd van studenten toeneemt?  
+
+*Ontwerpend, probleemoplossend en adviserend onderzoek*  
+Hoe kun je de negatieve effecten van sociale media minimaliseren 
+
+*Toetsend onderzoek*  
+Geeft het gebruik van sociale media genoeg voldoening om de tijd investering te rechtvaardigen?  
+
+**Vragen**
+Wat is je leeftijd
+Wat is je gender
+Hoevaak gebruik je 
+
+**vragen per sociale media**
+Hoevaak gebruik je het sociale media
+Hoevaak open je de app
+Ben je tevreden met de tijd dat je in dit sociale media investeerd
+Hoe gebruik je het sociale media
+- Kijken naar posts
+- Reageren op posts
+- Post liken
+- Posten
+- Het delen van posts
+
+**Sociale vragen**
+Hoe belangrijk vind je sociale media voor jezelf op een schaal van 1 tot 10
+
+

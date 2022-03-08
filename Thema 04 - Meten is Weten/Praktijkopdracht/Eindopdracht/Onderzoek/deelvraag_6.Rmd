@@ -1,0 +1,33 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r import_onderzoek_data, include=FALSE}
+# Data set inlezen
+library(readr)
+Onderzoek_Antwoorden <- read.csv("Social media (Antwoorden) - Formulierreacties 1.csv", 
+                                 as.is = c("What.is.your.age.", 
+                                           "What.other.social.media.platforms.do.you.use."))
+```
+
+*Gaat het gebruik van sociale media veranderen naarmate de leeftijd van studenten toeneemt?*  
+Deze deelvraag gebruiken we een staafdiagram waar op de x as de leeftijd staat en op de y as de gemiddelde tijd besteed voor die leeftijden. Met een trendlijn die de trend van sociale media gebruik hebben laten zien. Waar de leeftijden <16 en >30 niet worden gebruikt aangezien deze waarden niet representatief zijn voor specifieke leeftijden.
+
+```{r echo=FALSE}
+age <- as.numeric(Onderzoek_Antwoorden$What.is.your.age.)
+
+time_list.data_frame <- data.frame(time_list.numeric[-8])
+total_time_used <- rowSums(time_list.data_frame, na.rm = TRUE)
+
+voorspeling <- 10
+
+plot(total_time_used ~ age,
+     main = "Vergelijking tussen totaal gebruik en hoe belangrijk sociale media is",
+     xlab = "leeftijd",
+     ylab = "Totaal tijd gebruikt per gebruiker"
+     )
+trentlijn <- lm(total_time_used ~ age)
+abline(trentlijn)
+```
+

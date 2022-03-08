@@ -1,0 +1,44 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r import_onderzoek_data, include=FALSE}
+# Data set inlezen
+library(readr)
+Onderzoek_Antwoorden <- read.csv("Social media (Antwoorden) - Formulierreacties 1.csv", 
+                                 as.is = c("What.is.your.age.", 
+                                           "What.other.social.media.platforms.do.you.use."))
+```
+
+De gegevens die nodig zijn voor deze grafiek worden gemaakt in deelvraag_1.Rmd
+```{r}
+# Haal de data over de sex en stop dit in variabelen
+sexes <- c("Male", "Female")
+gender_data <- Onderzoek_Antwoorden$What.is.your.gender.
+
+# Maak de lege vector voor de data van de matrix
+times_sex_matrix.data <- numeric(0)
+
+# loop door de verschillende sociale media platvormen heen
+for (platform in names(time_list.numeric)){
+  # Bereken het gemiddelde tijd besteed in sociale media voor elke sex
+  times_sex_matrix.data <- c(times_sex_matrix.data, mean(time_list.numeric[[platform]][gender_data == "Male"], na.rm = T))
+  
+  times_sex_matrix.data <- c(times_sex_matrix.data, mean(time_list.numeric[[platform]][gender_data == "Female"], na.rm = T))
+  
+  # Verwijder alle variabelen die in de loop worden gemaakt
+  rm(platform)
+}
+
+# Maak de matrix en geef de rijen en kolommen een naam
+deelvraag3 <- matrix(times_sex_matrix.data, nrow = length(sexes))
+rownames(deelvraag3) <- sexes
+colnames(deelvraag3) <- names(time_list.numeric)
+
+barplot(deelvraag3, beside = TRUE, col = c("Blue", "Pink"), cex.names = .5)
+legend(21, 2, legend = sexes, col = c("Blue", "Pink"), pch = 15 )
+
+# Verwijder alle losse variabelen
+rm(times_sex_matrix.data, sexes, gender_data)
+```
+

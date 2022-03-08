@@ -1,0 +1,81 @@
+---
+title: "R Notebook"
+output: pdf
+author: "Niek Scholten, Micha Beens, Jelle Becirspahic"
+---
+
+#Materiaal & Methoden
+
+##Materiaal  
+Voor het verkrijgen van de data is gebruik gemaakt van een enquête in de Google forms applicatie waarna de data is geëxporteerd in een .csv bestand. Om de data te verwerken wordt gebruik gemaakt van Rstudio versie 1.2.1335.
+
+De enquête bestaat uit meerdere secties om per sociaal medium te kijken hoeveel en hoe het gebruikt wordt. Ook zijn er verscheidene secties over hoeveel sociale interacties studenten aangaan buiten sociale media om en hoe belangrijk zij dat vinden.  
+
+*Voor de gehele enquête, zie de bijlage.*
+
+##Methoden
+Voordat de enquête was verstuurd is deze getest door mede studenten om eventuele feedback te krijgen en de enquête te optimaliseren.  
+
+Om genoeg data te verzamelen was de enquête verstuurd naar studenten van verschillende instituten en leeftijden.
+
+Omdat Google forms automatisch de data in een .csv bestand omzet kon de data gelijk in RStudio geïmporteerd worden.
+\newpage
+
+#Resultaten
+
+```{r import.data, child="Social_media.csv"}
+Onderzoek_Antwoorden <- read.csv("Social_media.csv", as.is = c("What.other.social.media.platforms.do.you.use."))
+```
+
+```{r Data setup}
+use_instagram <- Onderzoek_Antwoorden$Do.you.use.Instagram.
+use_facebook <- Onderzoek_Antwoorden$Do.you.use.Facebook.
+use_whatsapp <- Onderzoek_Antwoorden$Do.you.use.Whatsapp.
+use_twitter <- Onderzoek_Antwoorden$Do.you.use.Twitter.
+use_snapchat <- Onderzoek_Antwoorden$Do.you.use.Snapchat.
+use_discord <- Onderzoek_Antwoorden$Do.you.use.any.of.these.platforms.
+use_overig.ruw <- Onderzoek_Antwoorden$What.other.social.media.platforms.do.you.use.
+
+use_overig <- unlist(strsplit(use_overig.ruw, ";"))
+
+use_instagram.logical <- c(TRUE, FALSE)[factor(use_instagram, levels = c("Yes", "No"))]
+use_facebook.logical <- c(TRUE, FALSE)[factor(use_facebook, levels = c("Yes", "No"))]
+use_whatsapp.logical <- c(TRUE, FALSE)[factor(use_whatsapp, levels = c("Yes", "No"))]
+use_twitter.logical <- c(TRUE, FALSE)[factor(use_twitter, levels = c("Yes", "No"))]
+use_snapchat.logical <- c(TRUE, FALSE)[factor(use_snapchat, levels = c("Yes", "No"))]
+use_discord.logical <- c(TRUE, FALSE)[factor(use_discord, levels = c("Yes", "No"))]
+```
+
+*Wat is het verschil in sociale media gebruik tussen de sekses?*  
+```{r Verschil tussen de sekses}
+gender <- Onderzoek_Antwoorden$What.is.your.gender.
+
+percentage.insta.f <- sum(use_instagram.logical[gender == "Female"] == TRUE)/length(use_instagram.logical[gender == "Female"])*100
+percentage.insta.m <- sum(use_instagram.logical[gender == "Male"] == TRUE)/length(use_instagram.logical[gender == "Male"])*100
+
+percentage.facebook.f <- sum(use_facebook.logical[gender == "Female"] == TRUE)/length(use_facebook.logical[gender == "Female"])*100
+percentage.facebook.m <- sum(use_facebook.logical[gender == "Male"] == TRUE)/length(use_facebook.logical[gender == "Male"])*100
+
+percentage.whatsapp.f <- sum(use_whatsapp.logical[gender == "Female"] == TRUE)/length(use_whatsapp.logical[gender == "Female"])*100
+percentage.whatsapp.m <- sum(use_whatsapp.logical[gender == "Male"] == TRUE)/length(use_whatsapp.logical[gender == "Male"])*100
+
+percentage.twitter.f <- sum(use_twitter.logical[gender == "Female"] == TRUE)/length(use_twitter.logical[gender == "Female"])*100
+percentage.twitter.m <- sum(use_twitter.logical[gender == "Male"] == TRUE)/length(use_twitter.logical[gender == "Male"])*100
+
+percentage.snapchat.f <- sum(use_snapchat.logical[gender == "Female"] == TRUE)/length(use_snapchat.logical[gender == "Female"])*100
+percentage.spapchat.m <- sum(use_snapchat.logical[gender == "Male"] == TRUE)/length(use_snapchat.logical[gender == "Male"])*100
+
+percentage.discord.f <- sum(use_discord.logical[gender == "Female"] == TRUE)/length(use_discord.logical[gender == "Female"])*100
+percentage.discord.m <- sum(use_discord.logical[gender == "Male"] == TRUE)/length(use_discord.logical[gender == "Male"])*100
+
+percentages <- c(percentage.insta.m, percentage.insta.f, percentage.facebook.m, percentage.facebook.f, percentage.whatsapp.m, percentage.whatsapp.f, percentage.twitter.m, percentage.twitter.f, percentage.spapchat.m,  percentage.snapchat.f, percentage.discord.m, percentage.discord.f)
+
+perc.matrix <- matrix(percentages, nrow = 2, ncol = 6)
+colnames(perc.matrix) <- c("Instagram", "Facebook", "Whatsapp", "Twitter", "Snapchat", "Discord")
+rownames(perc.matrix) <- c("Male", "Female")
+
+
+barplot(perc.matrix, beside = T, las=2, ylab = "Percentages", main = "Percentages of use", col = c("Blue", "Pink"))
+legend(x = 13, y = 100, legend = rownames(perc.matrix), col=c("Blue", "Pink"), pch = 15)
+```
+

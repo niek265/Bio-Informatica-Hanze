@@ -1,0 +1,184 @@
+---
+title: "Opdracht Week 6"
+author: "Jelle Becirspahic"
+date: "June 3, 2019"
+output: pdf_document
+---
+
+###Opdraht 3
+*lees het bestand JamesBond.csv in. Houd rekening met het type bestand en of er eventuele headers aanwezig zijn. Gebruik bv. de commandline om eerst de eerste 10 regels te bekijken. Het is altijd een goed idee om je data eerst te bekijken voordat je er mee aan de gang gaat.*
+```{r, child="JamesBond.csv"}
+info <- read.csv("JamesBond.csv", na.strings = "nan")
+head(info)
+```
+
+
+###Opdracht 4
+*Kolom 1 bevat unix time eenheden, converteer deze kolom naar een datetime format.*
+
+```{r}
+convert_time <- as.POSIXct(as.numeric(as.character(info$Date_Time )),origin="1970-01-01")
+head(convert_time)
+```
+
+###Opdracht 5
+*Hoeveel maaltijden werden er gelogd*
+```{r}
+length(info$Calorie_Intake[info$Calorie_Intake > 0])
+```
+
+###Opdracht 6
+*Wat is de frequentie van de activiteiten(annotation)?, neem nan en sleeping niet mee, sorteer van groot naar klein en roteer de x-as labels 90 graden*
+*Maak meerdere plotjes waarin de spreiding van de data wordt weergegeven*
+
+```{r}
+par(mar=c(10, 4, 1, 1))
+plot(sort(table(info$Annotation[info$Annotation != "sleeping"], exclude =             "sleeping"), decreasing = T),
+     main="Frequentie van activiteit",
+     ylab="Frequentie", 
+     col=rainbow(14),
+     las=2)
+
+mtext("Activiteiten", side = 1, line = 9)
+par(mar=c(0,0,1,0))
+pie(sort(table(info$Annotation[info$Annotation != "sleeping"], exclude =              "sleeping"), decreasing = T),
+     main="Frequentie van activiteit",
+    col=rainbow(14))
+```
+
+###Opdracht 7
+*Laat zien dat de glucose waarden per activiteiten normaal verdeeld zijn. Welke test kun je doen om te bepalen of een dataset normaal verdeelt is? doe deze test en interpreteer de p-value*
+
+```{r}
+fun <- function(x){
+  return(shapiro.test(x)[[2]])
+}
+p.val <- aggregate(info$Glucose_Levels, list(info$Annotation), fun)
+print("Als de waarden kleiner zijn dan 0.05 is de kans significant dat de waarden normaal verdeeld zijn.")
+plot(p.val, main="P-waarden per activiteit",
+     ylab="P-waarden",
+     las=2)
+```
+
+###Opdracht 8
+*Hoe was de calorie inname per maaltijd?, skip de velden waar een 0 in staat. Waarom is dat belangrijk?*
+
+```{r}
+calories <- info$Calorie_Intake[info$Calorie_Intake > 0]
+calories
+```
+
+Dit is belangrijk omdat een waarde van 0 betekent dat er geen maaltijd is gegeten.
+
+###Opdracht 9
+*Laat zien dat de verhoogde bloedsuiker spiegel niet/wel een effect is van de hoeveelheid calorien ingenomen. Voeg een trendline toe aan je plot.*
+
+```{r}
+index <- info$Calorie_Intake > 0
+
+plot(info$Calorie_Intake[index], info$Glucose_Levels[index],
+     main="Bloedsuiker spiegel ten opzichte van caloie inname.",
+     xlab = "Calorie inname [kcal]",
+     ylab = "Bloedsuiker spiegel [mmol/L]",)
+
+linear.model <- lm(info$Glucose_Levels[index]~info$Calorie_Intake[index])
+
+abline(linear.model)
+
+print(paste("De trend is", linear.model$coefficients[[2]], "en is dus niet gelijk aan 0. Dit geeft aan dat de inname van calorien wel een effect heeft op de bloedsuiker spiegel."))
+```
+
+###Opdracht 10
+*Plot de spreiding van het glucose niveau per activiteit.*
+```{r}
+for (activity in levels(info$Annotation)){
+  boxplot(info$Glucose_Levels[info$Annotation == activity],
+          main=paste("Spread of Glucose levels during", activity),
+          ylab="Glucose levels [mmol/mL]")
+}
+```
+
+###Opdracht 11
+*Laat zien hoeveel calorien er werden ingenomen per activiteit.*
+
+```{r}
+calorie.activity <- numeric(0)
+for (activity in levels(info$Annotation)){
+  calorie.activity <- c(calorie.activity, mean(info$Calorie_Intake[info$Annotation == activity], na.rm = TRUE))
+}
+calorie.activity <- c(calorie.activity, mean(info$Calorie_Intake[is.na(info$Annotation)], na.rm = TRUE))
+
+
+names(calorie.activity) <- c(levels(info$Annotation), "idle")
+barplot(calorie.activity, main="Gemiddelde calorie inname per activiteit",
+        ylab = "gemiddelde calorie inname [kcal]",
+        las=2)
+
+```
+
+###Opdracht 12
+*Heeft de samenstelling van het eten invloed op het glucose niveau? fat vs fiber vs carbs vs protein tegen het glucose niveau*
+
+```{r}
+types <- c("Fiber_Intake", "Carbohydrates_Intake", "Fat_Intake", "Protein_Intake")
+par(mfrow=c(2, 2))
+for (type in types){
+  indicies <-order(info[[type]][index], decreasing = T)
+  
+  gl.type <- info$Glucose_Levels[index][indicies]~ info[[type]][index][indicies]
+  
+  plot(gl.type, 
+       main=paste("Glucose levels for", type),
+       xlab=paste(type, "[g]"),
+       ylab="Glucose levels [mmol/L]",
+       type = "p")
+  abline(lm(gl.type))
+}
+```
+
+
+###Opdracht 13
+*Maak een figuur waarin je tijdstip van de dag uitzet tegen de Glucose spiegel*
+
+```{r}
+par(mfrow = c(1,1))
+plot(info$Glucose_Levels~convert_time, main="Bloedsuiker spiegel per dag",
+     xlab = "tijd",
+     ylab = "Bloedsuikerspiegel [mmol/L]")
+```
+
+###Opdracht 14
+*maak een figuur waarin duidelijk wordt wat de spreiding in glucose spiegel is voor elke activiteit.*
+Zie opdracht 10.
+
+###Opdracht 15
+*zit er een significant verschil tussen de groepsgemiddelden van de glucose spiegel tegen de activiteit?*
+```{r}
+glucose.activity <- numeric(0)
+for (activity in levels(info$Annotation)){
+  glucose.activity <- c(glucose.activity, mean(info$Glucose_Levels[info$Annotation == activity], na.rm = TRUE))
+}
+glucose.activity <- c(glucose.activity, mean(info$Glucose_Levels[is.na(info$Annotation)], na.rm = TRUE))
+
+t.toets <- t.test(c(min(glucose.activity), max(glucose.activity)))
+
+  
+names(glucose.activity) <- c(levels(info$Annotation), "idle")
+par(mar=c(9, 4, 2, 1))
+barplot(glucose.activity, main="Gemiddelde bloedsuiker spiegel per activiteit",
+        ylab = "Bloedsuiker spiegel [mmol/L]",
+        las=2)
+mtext("Activiteiten", side = 1, line = 7)
+
+print(paste("De p-waarde is", t.toets$p.value, "en is groter dan 0.05 dus insignificant."))
+```
+
+
+
+
+
+
+
+
+
+

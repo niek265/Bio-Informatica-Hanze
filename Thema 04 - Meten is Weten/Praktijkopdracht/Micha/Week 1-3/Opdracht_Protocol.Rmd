@@ -1,0 +1,60 @@
+---
+title: "Opdracht_Protocol"
+author: "Niek Scholten, Micha Beens, Jelle Becirspahic"
+date: "May 7, 2019"
+output: pdf_document
+---
+
+## Doel
+In ons onderzoek gaan we kijken of sociale media negatieve effecten heeft op het sociale leven van studenten.
+Daarom hebben de volgende onderzoeksvraag opgesteld:   
+
+* 'Heeft het gebruik van sociale media negatieve effecten op het sociale leven van een student?'  
+
+De hypotheses die we gaan testen zijn als volgt:  
+
+* 'Het gebruik van sociale media heeft negatieve effecten op het sociale leven van een student.' 
+
+* 'Het gebruik van sociale media heeft geen negatieve effecten op het sociale leven van een student.' 
+
+* 'Het gebruik van sociale media heeft positieve effecten op het sociale leven van een student.' 
+
+* 'Het gebruik van sociale media heeft geen positieve effecten op het sociale leven van een student.' 
+
+## Materialen
+We hebben verschillende mensen nodig, het liefst een zo groot mogelijke groep.
+Om tot onze resultaten te komen gaan we een enquête gebruiken.
+
+## Methode
+We gaan de enquête naar verschillende medestudenten sturen, en ze vragen of ze de enquête door willen sturen naar andere studenten. Zo hopen we een zo veel mogelijk reacties te krijgen.
+
+## Eventuele controles
+We gaan geen verandering meten, dus een controle proef is niet nodig.
+
+## Data interpretatie/Statistische testen
+**De onderzoeks vragen en hoe we hun data willen weergeven**  
+
+*Hoeveel wordt sociale media gebruikt?*  
+Om de gegevens weet te geven voor deze vraag gebruiken we een staaf diagram met de vijf grote sociale media platformen plus een sectie met de overige platformen waar de hoogte weergeeft hoeveel tijd er gemiddeld voor het sociale platform wordt gebruikt.
+
+*Wat is het verschil in sociale media gebruik tussen de leeftijden?*  
+Om hier antwoord op te geven gebruiken we een staaf diagram die weergeeft hoeveel tijd er gestoken wordt in sociale media voor elke leeftijd van <16 tot >30 in stappen van 1.  
+
+*Wat is het verschil in sociale media gebruik tussen de sekses?*  
+Voor deze vraag gebruiken we ook een staaf diagram die per grote sociale media platvorm de tijd weergeeft dat wordt gebruikt door de sekses.  
+
+*Hoe belangrijk vind een student sociale media?*  
+Om het antwoord op deze vraag goed weer te geven gaan we gebruik maken van een staaf diagram waar het belang van sociale media weergegeven is op een 10 punt schaal met hoe vaak het antwoord is gegeven de hoogte van de staaf bepaald.  
+
+*Wat is de oorzaak van de significantie van sociale media van een student?*  
+Deze deelvraag gaan we weergeven met een cirkel diagram met de meest voorkomende overbruggend categorieën van de antwoorden en hoe vaak deze voorkomen.  
+
+*Gaat het gebruik van sociale media veranderen naarmate de leeftijd van studenten toeneemt?*  
+Deze deelvraag gebruiken we een staafdiagram waar op de x as de leeftijd staat en op de y as de gemiddelde tijd besteed voor die leeftijden. Met een trendlijn die de trend van sociale media gebruik hebben laten zien. Waar de leeftijden <16 en >30 niet worden gebruikt aangezien deze waarden niet representatief zijn voor specifieke leeftijden.
+
+*Hoe kun je de negatieve effecten van sociale media minimaliseren*  
+N.V.T.
+
+*Geeft het gebruik van sociale media genoeg voldoening om de tijd investering te rechtvaardigen?*
+Om deze deelvraag weer te geven gebruiken we een cirkel diagram moet de totale verdeling van alle sociale platformen en een kleinere cirkel diagrammen met de individuele platformen.
+

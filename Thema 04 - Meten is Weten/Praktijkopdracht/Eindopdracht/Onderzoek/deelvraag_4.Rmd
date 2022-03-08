@@ -1,0 +1,25 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r import_onderzoek_data, include=FALSE}
+# Data set inlezen
+library(readr)
+Onderzoek_Antwoorden <- read.csv("Social media (Antwoorden) - Formulierreacties 1.csv", 
+                                 as.is = c("What.is.your.age.", 
+                                           "What.other.social.media.platforms.do.you.use."))
+```
+
+*Hoe belangrijk vind een student sociale media?*  
+Om het antwoord op deze vraag goed weer te geven gaan we gebruik maken van een staaf diagram waar het belang van sociale media weergegeven is op een 10 punt schaal met hoe vaak het antwoord is gegeven de hoogte van de staaf bepaald.
+
+```{r}
+deelvraag4 <- table(Onderzoek_Antwoorden$How.important.is.social.media.for.you.)
+plot(deelvraag4, 
+     lwd = 5, 
+     xlab = "Score belang sociale media",
+     ylab = "Frequentie",
+     col = rainbow(10))
+```
+

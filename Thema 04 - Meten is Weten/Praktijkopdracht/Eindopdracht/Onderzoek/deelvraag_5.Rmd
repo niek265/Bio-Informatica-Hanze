@@ -1,0 +1,29 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r import_onderzoek_data, include=FALSE}
+# Data set inlezen
+library(readr)
+Onderzoek_Antwoorden <- read.csv("Social media (Antwoorden) - Formulierreacties 1.csv", 
+                                 as.is = c("What.is.your.age.", 
+                                           "What.other.social.media.platforms.do.you.use."))
+```
+
+*Wat is de oorzaak van de significantie van sociale media van een student?*  
+Deze deelvraag gaan we weergeven met een cirkel diagram met de meest voorkomende overbruggend categorieën van de antwoorden en hoe vaak deze voorkomen.  dotplot totaal gebruik tegen signivicantie sociale media
+
+```{r}
+belang_sociale_media <- Onderzoek_Antwoorden$How.important.is.social.media.for.you.
+time_list.data_frame <- data.frame(time_list.numeric[-8])
+total_time_used <- rowSums(time_list.data_frame, na.rm = TRUE)
+
+deelvraag5 <- data.frame(belang_sociale_media, total_time_used)
+
+plot(deelvraag5,
+     main = "Vergelijking tussen totaal gebruik en hoe belangrijk sociale media is",
+     xlab = "significantie sociale media",
+     ylab = "Totaal tijd gebruikt per gebruiker")
+abline(lm(deelvraag5))
+```

@@ -1,0 +1,21 @@
+---
+title: "Beoordeling protocol"
+author: "Jelle Becirspahic"
+date: "May 8, 2019"
+output: pdf_document
+---
+
+Beoordeling voor Arend, Sander, Owen.
+
+###Doel
+Doel is duidelijk. Hypothese laat nog vragen over. Wat is de score? 3.5 op welke schaal?
+de andere hypothesen sluiten elkaar niet uit. Het kan te druk zijn EN te lang duren EN oncomfortabel zijn allemaal met een gegeven score lager dan 2.5.
+
+###Materiaal
+Materiaal is duidelijk. Waarschijnlijk delen jullie de enquete wel maar delen jullie hem niet uit.
+
+###Methoden
+Methode is duidelijk.
+
+###Data interpretatie
+Dit is ook duidelijk.

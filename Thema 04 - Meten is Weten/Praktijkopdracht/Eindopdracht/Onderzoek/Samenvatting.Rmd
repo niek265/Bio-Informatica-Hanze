@@ -1,0 +1,35 @@
+---
+title: "Samenvatting"
+author: "Jelle Becirspahic"
+date: "6/14/2019"
+output: pdf_document
+---
+
+
+## Doel
+In dit onderzoek werd gekeken of sociale media negatieve effecten heeft op het sociale leven van studenten.
+Daarom zijn de volgende onderzoeksvraag opgesteld:   
+
+* 'Heeft het gebruik van sociale media negatieve effecten op het sociale leven van studenten?'  
+
+De hypotheses die we gaan testen zijn als volgt:  
+
+* 'Het gebruik van sociale media heeft negatieve effecten op het sociale leven studenten.' 
+
+* 'Het gebruik van sociale media heeft geen negatieve effecten op het sociale leven van studenten.' 
+
+* 'Het gebruik van sociale media heeft positieve effecten op het sociale leven van studenten.' 
+
+* 'Het gebruik van sociale media heeft geen positieve effecten op het sociale leven van studenten.' 
+
+Om deze hypotheses te testen zijn er een aantal deelvragen gesteld.
+
+*- Hoeveel wordt sociale media gebruikt?*  
+*- Wat is het verschil in sociale media gebruik tussen de leeftijden?*  
+*- Wat is het verschil in sociale media gebruik tussen de sekses?*  
+*- Hoe belangrijk vind een student sociale media?*  
+*- Wat is de oorzaak van de significantie van sociale media van een student?*  
+*- Gaat het gebruik van sociale media veranderen naarmate de leeftijd van studenten toeneemt?*  
+*- Geeft het gebruik van sociale media genoeg voldoening om de tijd investering te rechtvaardigen?*
+
+Deze deelvragen zijn door middel van een enquête beantwoord. Hieruit bleek dat er kleine verschillen zijn tussen gebruik van sociale media onder, mannen en vrouwen, en tussen leeftijden. Ook zijn de meeste mensen tevreden met hun media gebruik. De hoofdvraag is echter niet duidelijk beantwoord omdat er geen duidelijk verband was tussen negatieve dingen als, weinig contact buiten sociale media, en groot gebruik van deze media. 

@@ -1,0 +1,69 @@
+---
+title: "Opdracht_Uitvoering"
+author: "Micha Snippe, Niek Scholten, Jelle Becirspahic"
+date: "15-5-2019"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r import_onderzoek_data, include=FALSE}
+# Data set inlezen
+library(readr)
+Onderzoek_Antwoorden <- read.csv("Social media (Antwoorden) - Formulierreacties 1.csv", as.is = c("What.other.social.media.platforms.do.you.use."))
+```
+
+##Data verzamelen
+Om de data te verkrijgen die we nodig hadden hebben we een Google form enquête gebruikt die we zelf in elkaar hadden gezet. Deze enquête bevat vragen over hoe mensen sociale media gebruiken en wat ze er van vinden, ook bevat het vragen om een beeld te scheppen hoe sociaal ze zijn IRL.
+
+##Missende data
+Aangezien sommige antwoorden, vragen uitsluiten aangezien ze niet van toepassing zijn bevind er in onze dataset missende data. Deze missende data gaan we waarschijnlijk negeren aangezien deze niet van toepassing waren voor de persoon die de enquête had ingevuld.
+
+##Start uitwerking deelvragen
+Hoeveel wordt elk sociaal platvorm gebruikt
+```{r Deelvraag_3_data}
+use_instagram <- Onderzoek_Antwoorden$Do.you.use.Instagram.
+use_facebook <- Onderzoek_Antwoorden$Do.you.use.Facebook.
+use_whatsapp <- Onderzoek_Antwoorden$Do.you.use.Whatsapp.
+use_twitter <- Onderzoek_Antwoorden$Do.you.use.Twitter.
+use_snapchat <- Onderzoek_Antwoorden$Do.you.use.Snapchat.
+use_discord <- Onderzoek_Antwoorden$Do.you.use.any.of.these.platforms.
+use_overig <- Onderzoek_Antwoorden$What.other.social.media.platforms.do.you.use.
+
+use_list <- list(use_instagram, use_facebook, use_whatsapp, use_twitter, use_snapchat, use_discord, use_overig)
+
+names(use_list) <- c("Instagram", "Facebook", "Whatsapp", "Twitter", "Snapchat", "Discord", "Overige_Platforms")
+
+# Verwijder alle lose use variabelen
+rm(use_overig, use_instagram, use_facebook, use_whatsapp, use_twitter, use_snapchat, use_discord)
+```
+
+```{r}
+use_instagram.platform <- c("Instagram", NA)[factor(use_list$Instagram, levels = c("Yes", "No"))]
+use_facebook.platform <- c("Facebook", NA)[factor(use_list$Facebook, levels = c("Yes", "No"))]
+use_whatsapp.platform <- c("Whatsapp", NA)[factor(use_list$Whatsapp, levels = c("Yes", "No"))]
+use_twitter.platform <- c("Twitter", NA)[factor(use_list$Twitter, levels = c("Yes", "No"))]
+use_snapchat.platform <- c("Snapchat", NA)[factor(use_list$Snapchat, levels = c("Yes", "No"))]
+use_discord.platform <- c("Discord", NA)[factor(use_list$Discord, levels = c("Yes", "No"))]
+use_overig.platform <- unlist(strsplit(use_list$Overige_Platforms, ","))
+
+use_list.platfomen <- c(use_overig.platform, use_instagram.platform, use_facebook.platform, use_whatsapp.platform, use_twitter.platform, use_snapchat.platform, use_discord.platform)
+
+length(Onderzoek_Antwoorden$Tijdstempel)
+barplot(sort(table(use_list.platfomen)/length(Onderzoek_Antwoorden$Tijdstempel)*100, decreasing = TRUE)[1:10],
+        cex.names = .6)
+sort(table(use_list.platfomen), decreasing = TRUE)
+
+# Verwijder alle lose use.platform variabelen
+#rm(use_instagram.platform, use_facebook.platform, use_whatsapp.platform, use_twitter.platform, use_snapchat.platform, use_discord.platform, use_overig.platform)
+```
+
+```{r}
+```
+
+```{r remove_variables_except_research_data, include=FALSE}
+#rm(list=c(ls()[ls() != "Onderzoek_Antwoorden"]))
+```

@@ -1,0 +1,541 @@
+---
+title: "Sociale invloed"
+subtitle: "De invloed van sociale media op het sociale leven van een student"
+output: pdf_document
+author: "Jelle Becirspahic, Niek Scholten, Micha Beens"
+---
+![Social media](media.jpg){width=400px}
+
+  
+387615, 388602, 385653  
+BFV1B  
+14 Juni 2019  
+Arne Poortinga  
+
+\newpage
+
+\newpage
+# Voorwoord
+
+Het onderzoek is gedaan voor de eindopdracht van kwartaal 4 van de studie bio-informatica. 
+We willen graag iedereen bedanken die de enquete in heeft gevuld, en de mensen die ons feedback hebben gegeven.
+Het was erg interessant om te bekijken wat de verdeling was van sociale media onder studenten, en wat voor effect dit had op hun sociale leven.
+
+\newpage
+# Samenvatting
+
+## Doel
+In dit onderzoek werd gekeken of sociale media negatieve effecten hebben op het sociale leven van studenten.
+Daarom zijn de volgende onderzoeksvraag opgesteld:   
+
+* 'Heeft het gebruik van sociale media negatieve effecten op het sociale leven van studenten?'  
+
+Met negatieve effecten wordt een vermindering van sociale activiteiten en contacten bedoeld.
+Dus het doel is om te kijken of er een verband ligt tussen verminderde sociale interacties en sociale media gebruik.
+
+De hypotheses die we gaan testen zijn als volgt:  
+
+* 'Het gebruik van sociale media heeft negatieve effecten op het sociale leven studenten.' 
+
+* 'Het gebruik van sociale media heeft geen negatieve effecten op het sociale leven van studenten.' 
+
+* 'Het gebruik van sociale media heeft positieve effecten op het sociale leven van studenten.' 
+
+* 'Het gebruik van sociale media heeft geen positieve effecten op het sociale leven van studenten.' 
+
+Om deze hypotheses te testen zijn er een aantal deelvragen gesteld.
+
+*- Hoeveel wordt sociale media gebruikt?*  
+*- Wat is het verschil in sociale media gebruik tussen de leeftijden?*  
+*- Wat is het verschil in sociale media gebruik tussen de sekses?*  
+*- Hoe belangrijk vind een student sociale media?*  
+*- Gaat het gebruik van sociale media veranderen naarmate de leeftijd van studenten toeneemt?*  
+*- Geeft het gebruik van sociale media genoeg voldoening om de tijd investering te rechtvaardigen?*
+
+Deze deelvragen zijn door middel van een enquête beantwoord. Hieruit bleek dat er kleine verschillen zijn tussen gebruik van sociale media onder, mannen en vrouwen, en tussen leeftijden. Ook zijn de meeste mensen tevreden met hun media gebruik. De hoofdvraag is echter niet duidelijk beantwoord omdat er geen duidelijk verband was tussen negatieve dingen als, weinig contact buiten sociale media, en groot gebruik van deze media. 
+
+
+\newpage
+\tableofcontents
+
+\newpage
+# Lijst met afkortingen en symbolen
+
+csv - comma-separated values
+
+\newpage
+# Materiaal  
+Voor het verkrijgen van de data is gebruik gemaakt van een enquête in de Google forms applicatie waarna de data is geëxporteerd in een .csv bestand.  
+
+De enquête bestaat uit meerdere secties om per sociaal medium te kijken hoeveel en hoe het gebruikt wordt. Ook zijn er verscheidene secties over hoeveel sociale interacties studenten aangaan buiten sociale media om en hoe belangrijk zij dat vinden.  
+
+*Voor de gehele enquête, zie de bijlage.*
+
+# Methoden
+Voordat de enquête was verstuurd is deze getest door mede studenten om eventuele feedback te krijgen en de enquête te optimaliseren.  
+
+Om genoeg data te verzamelen was de enquête verstuurd naar studenten van verschillende instituten en leeftijden.
+
+Omdat Google forms automatisch de data in een .csv bestand omzet kon de data gelijk in RStudio geïmporteerd worden.
+
+\newpage
+# Resultaten
+```{r import_onderzoek_data, include=FALSE}
+# Data set inlezen
+library(readr)
+Onderzoek_Antwoorden <- read.csv("Social media (Antwoorden) - Formulierreacties 1.csv", 
+                                 as.is = c("What.is.your.age.", 
+                                           "What.other.social.media.platforms.do.you.use."))
+```
+
+##Hoeveel wordt sociale media gebruikt?  
+Deze grafiek is om achter te komen hoeveel de platformen gemiddeld gebruikt worden en hoeveel alle platformen gemiddeld gebruikt worden. 
+```{r data_setup_deelvraag_1, include = FALSE}
+
+# Verzamel de data van tijd besteed op elke platvorm
+levels_insta <- c("0 to 1 hour(s)", "1 to 2 hours", "3 to 4 hours", "4 to 5 hours", "5 to 6 hours", ">6 hours")
+time_insta <- factor(Onderzoek_Antwoorden$How.much.time.do.you.spend.on.this.platform.daily., levels = levels_insta, ordered = T)
+
+levels_fb <- c("0 to 1 hour(s)", "1 to 2 hours", "3 to 4 hours", "4 to 5 hours", "5 to 6 hours", ">6 hours")
+time_fb <- factor(Onderzoek_Antwoorden$How.much.time.do.you.spend.on.this.platform.daily..1, levels = levels_fb, ordered = T)
+
+levels_whatsapp <- c("0 - 30 minutes", "30 minutes - 1 hour", "1 - 1.5 hours", "1.5 - 2 hours", "2 - 2.5 hours", ">3 hours")
+time_whatsapp <- factor(Onderzoek_Antwoorden$How.much.time.do.you.spend.on.this.platform.daily..2, levels = levels_whatsapp, ordered = T)
+
+levels_twitter <- c("0 to 1 hour(s)", "1 to 2 hours", "3 to 4 hours", "4 to 5 hours", "5 to 6 hours", ">6 hours")
+time_twitter <- factor(Onderzoek_Antwoorden$How.much.time.do.you.spend.on.this.platform.daily..3, levels = levels_twitter, ordered = T)
+
+levels_snap <- c("0 to 1 hour(s)", "1 to 2 hours", "3 to 4 hours", "4 to 5 hours", "5 to 6 hours", ">6 hours")
+time_snap <- factor(Onderzoek_Antwoorden$How.much.time.do.you.spend.on.this.platform.daily..4, levels = levels_snap, ordered = T)
+
+levels_disc <- c("< 1 hour", "1 - 2 hours", "2 - 3 hours", "3 - 4 hours", "5 - 6 hours", "> 6 hours")
+time_disc <- factor(Onderzoek_Antwoorden$How.much.time..on.average..do.you.spend.on.these.platforms.daily., levels = levels_disc, ordered = T)
+
+levels_overig <- c("0 - 30 minutes", "30 minutes - 1 hour", "1 - 1.5 hours", "1.5 - 2 hours", "2 - 3 hours", "3 - 4 hours", "4 - 5 hours", ">5 hours")
+time_overig <- factor(Onderzoek_Antwoorden$How.much.time..on.average..do.you.spend.on.these.social.platforms.on.a.daily.basis., levels = levels_overig, ordered = T)
+
+time_list <- list(Instagram = time_insta, Facebook = time_fb, Whatsapp = time_whatsapp, Twitter = time_twitter, Snapchat = time_snap, Discord = time_disc, 'Overige Platforms' = time_overig)
+
+# Verwijder de level variabelen
+rm(levels_insta, levels_fb, levels_whatsapp, levels_twitter, levels_snap, levels_disc, levels_overig)
+
+# Verwijder de losse variabelen
+rm(time_insta, time_fb, time_whatsapp, time_twitter, time_snap, time_disc, time_overig)
+```
+```{r numeric_data_setup, echo=FALSE}
+time_insta.numeric <- c(0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6)[time_list$Instagram]
+time_fb.numeric <- c(0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6)[time_list$Facebook]
+time_whatsapp.numeric <- c(0.25, 0.75, 1.25, 1.75, 2.25, 3)[time_list$Whatsapp]
+time_twitter.numeric <- c(0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6)[time_list$Twitter]
+time_snap.numeric <- c(0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6)[time_list$Snapchat]
+time_disc.numeric <- c(0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6)[time_list$Discord]
+time_overig.numeric <- c(0.25, 0.75, 1.25, 1.75, 2.5, 3.5, 4.5, 5)[time_list$`Overige Platforms`]
+time_all.numeric <- c(time_insta.numeric, time_fb.numeric, time_whatsapp.numeric, time_twitter.numeric, time_snap.numeric, time_disc.numeric, time_overig.numeric)
+
+time_list.numeric <- list(Instagram = time_insta.numeric, Facebook = time_fb.numeric, Whatsapp = time_whatsapp.numeric, Twitter = time_twitter.numeric, Snapchat = time_snap.numeric, Discord = time_disc.numeric, 'Overige platforms' = time_overig.numeric, 'All platforms' = time_all.numeric)
+
+# Verwijder alle losse variabelen voor overzicht
+rm(time_insta.numeric, time_fb.numeric, time_whatsapp.numeric, time_twitter.numeric, time_snap.numeric, time_disc.numeric, time_overig.numeric, time_all.numeric)
+
+```
+
+```{r calculating_mean, echo=FALSE}
+# Bereken het gemiddelde voor elke platvorm en zet de berekende gemiddelde in een lijst
+time_list.mean <- lapply(time_list.numeric, FUN = function(x){mean(x, na.rm = T)} )
+```
+
+```{r graph_mean_time_spend, echo=FALSE}
+a <- 2
+barplot(as.numeric(time_list.mean),
+        main = "Gemiddelde tijd besteed aan elk platform",
+        col = rainbow(8),
+        cex.names = .5,
+        ylim = c(0, max(table(time_list.mean)) + 1),
+        names.arg = names(time_list.mean),
+        ylab = "Tijd in uur"
+        )
+print(paste0("Figuur ", a))
+  a = a + 1
+```
+
+
+```{r print_mean_time, echo=FALSE}
+# Log de means
+for (platvorm in names(time_list.mean)){
+  cat("De gemiddelde tijd besteed in ", platvorm,":", time_list.mean[[platvorm]], "uur\n")
+  
+  # Verwijder de variablen die in de loop worden gemaakt
+  rm(platvorm)
+}
+```
+
+\newpage
+
+##Wat is het verschil in sociale media gebruik tussen de leeftijden?  
+Per leeftijd zit er verschil in de mate van sociale media gebruik, de data is afkomstig van 16 tot 30 jarigen, maar vooral van 17 tot 23 jarigen.  
+
+```{r plot_sociale_media_per_leeftijd, echo=FALSE , warning=FALSE}
+# Verzamel alle leeftijden 
+age <- as.numeric(Onderzoek_Antwoorden$What.is.your.age.)
+# Een vector die alle leeftijden bevat die gemeten zijn van min tot max
+age_range <- min(age, na.rm = T):max(age, na.rm = T)
+
+namen_platvormen <- names(time_list.numeric)
+
+# Loop door elk platform heen
+for (platform in namen_platvormen[length(namen_platvormen)]){
+  
+  # Lege vector voor de gemiddelden van het platform
+  average_time_per_age <- numeric(0)
+  
+  # Loop door alle leeftijden
+  for(num in age_range){
+    # Bereken het gemiddelde tijd besteed op het platform
+    gem <- mean(time_list.numeric[[platform]][age == num], na.rm = T)
+    
+    # Zet het gemiddelde in de container vector
+    average_time_per_age <- c(average_time_per_age, gem)
+    
+    # Log het gemiddelde
+    #cat("The average time spent by", num, "year olds on this platform is", gem, "uur\n")
+    rm(num, gem)
+  }
+  
+  # Plot de gemiddelde tijd besteed voor elke leeftijd
+  plot(age_range, average_time_per_age, type = "h", 
+       lwd = 15,
+       main = paste("Gemiddelde tijd besteed op alle platformen per leeftijd"),
+       xlab = "Leeftijd in jaren",
+       ylab = "Tijd besteed aan alle platformen in uur",
+       col = rainbow(max(age, na.rm = T) - min(age, na.rm = T) + 1)
+       )
+  print(paste0("Figuur ", a))
+  a = a + 1
+  
+  rm(platform, average_time_per_age)
+}
+
+rm(age, age_range)
+```
+
+\newpage
+
+##Wat is het verschil in sociale media gebruik tussen de sekses?
+Hier wordt de tijdsverdeling en het gebruikspercentage van mannen en vrouwen weer gegeven.
+```{r echo=FALSE}
+# Haal de data over de sex en stop dit in variabelen
+sexes <- c("Male", "Female")
+gender_data <- Onderzoek_Antwoorden$What.is.your.gender.
+
+# Maak de lege vector voor de data van de matrix
+times_sex_matrix.data <- numeric(0)
+
+# loop door de verschillende sociale media platvormen heen
+for (platform in names(time_list.numeric)){
+  # Bereken het gemiddelde tijd besteed in sociale media voor elke sex
+  times_sex_matrix.data <- c(times_sex_matrix.data, mean(time_list.numeric[[platform]][gender_data == "Male"], na.rm = T))
+  times_sex_matrix.data <- c(times_sex_matrix.data, mean(time_list.numeric[[platform]][gender_data == "Female"], na.rm = T))
+}
+
+# Maak de matrix en geef de rijen en kolommen een naam
+times_sex_matrix <- matrix(times_sex_matrix.data, nrow = length(sexes))
+rownames(times_sex_matrix) <- sexes
+colnames(times_sex_matrix) <- names(time_list.numeric)
+
+barplot(times_sex_matrix, main ='Verdeling van tijd per geslacht per platform', beside = TRUE, col = c("Blue", "Pink"), cex.names = .5, ylab = "Tijd besteed in uur")
+legend(21, 2, legend = sexes, col = c("Blue", "Pink"), pch = 15 )
+print(paste0("Figuur ", a))
+a = a + 1
+```
+```{r Verschil tussen de sekses, echo=FALSE}
+use_instagram <- Onderzoek_Antwoorden$Do.you.use.Instagram.
+use_facebook <- Onderzoek_Antwoorden$Do.you.use.Facebook.
+use_whatsapp <- Onderzoek_Antwoorden$Do.you.use.Whatsapp.
+use_twitter <- Onderzoek_Antwoorden$Do.you.use.Twitter.
+use_snapchat <- Onderzoek_Antwoorden$Do.you.use.Snapchat.
+use_discord <- Onderzoek_Antwoorden$Do.you.use.any.of.these.platforms.
+use_overig.ruw <- Onderzoek_Antwoorden$What.other.social.media.platforms.do.you.use.
+
+use_overig <- unlist(strsplit(use_overig.ruw, ";"))
+
+use_instagram.logical <- c(TRUE, FALSE)[factor(use_instagram, levels = c("Yes", "No"))]
+use_facebook.logical <- c(TRUE, FALSE)[factor(use_facebook, levels = c("Yes", "No"))]
+use_whatsapp.logical <- c(TRUE, FALSE)[factor(use_whatsapp, levels = c("Yes", "No"))]
+use_twitter.logical <- c(TRUE, FALSE)[factor(use_twitter, levels = c("Yes", "No"))]
+use_snapchat.logical <- c(TRUE, FALSE)[factor(use_snapchat, levels = c("Yes", "No"))]
+use_discord.logical <- c(TRUE, FALSE)[factor(use_discord, levels = c("Yes", "No"))]
+
+gender <- Onderzoek_Antwoorden$What.is.your.gender.
+
+percentage.insta.f <- sum(use_instagram.logical[gender == "Female"] == TRUE)/length(use_instagram.logical[gender == "Female"])*100
+percentage.insta.m <- sum(use_instagram.logical[gender == "Male"] == TRUE)/length(use_instagram.logical[gender == "Male"])*100
+
+percentage.facebook.f <- sum(use_facebook.logical[gender == "Female"] == TRUE)/length(use_facebook.logical[gender == "Female"])*100
+percentage.facebook.m <- sum(use_facebook.logical[gender == "Male"] == TRUE)/length(use_facebook.logical[gender == "Male"])*100
+
+percentage.whatsapp.f <- sum(use_whatsapp.logical[gender == "Female"] == TRUE)/length(use_whatsapp.logical[gender == "Female"])*100
+percentage.whatsapp.m <- sum(use_whatsapp.logical[gender == "Male"] == TRUE)/length(use_whatsapp.logical[gender == "Male"])*100
+
+percentage.twitter.f <- sum(use_twitter.logical[gender == "Female"] == TRUE)/length(use_twitter.logical[gender == "Female"])*100
+percentage.twitter.m <- sum(use_twitter.logical[gender == "Male"] == TRUE)/length(use_twitter.logical[gender == "Male"])*100
+
+percentage.snapchat.f <- sum(use_snapchat.logical[gender == "Female"] == TRUE)/length(use_snapchat.logical[gender == "Female"])*100
+percentage.spapchat.m <- sum(use_snapchat.logical[gender == "Male"] == TRUE)/length(use_snapchat.logical[gender == "Male"])*100
+
+percentage.discord.f <- sum(use_discord.logical[gender == "Female"] == TRUE)/length(use_discord.logical[gender == "Female"])*100
+percentage.discord.m <- sum(use_discord.logical[gender == "Male"] == TRUE)/length(use_discord.logical[gender == "Male"])*100
+
+percentages <- c(percentage.insta.m, percentage.insta.f, percentage.facebook.m, percentage.facebook.f, percentage.whatsapp.m, percentage.whatsapp.f, percentage.twitter.m, percentage.twitter.f, percentage.spapchat.m,  percentage.snapchat.f, percentage.discord.m, percentage.discord.f)
+
+perc.matrix <- matrix(percentages, nrow = 2, ncol = 6)
+colnames(perc.matrix) <- c("Instagram", "Facebook", "Whatsapp", "Twitter", "Snapchat", "Discord")
+rownames(perc.matrix) <- c("Male", "Female")
+
+
+barplot(perc.matrix, beside = T, las=2, ylab = "Percentages", main = "Gebruikspercentages van platformen per geslacht", col = c("Blue", "Pink"))
+legend(x = 13, y = 100, legend = rownames(perc.matrix), col=c("Blue", "Pink"), pch = 15)
+
+print(paste0("Figuur ", a))
+a = a + 1
+```
+
+\newpage
+
+##Hoe belangrijk vind een student sociale media?
+De belang score is geschaald van 1 to 10 en geeft weer hoe belangrijk een student sociale media vindt.
+
+```{r, echo=FALSE}
+belang_sociale_media <- Onderzoek_Antwoorden$How.important.is.social.media.for.you.
+plot(table(belang_sociale_media), 
+     lwd = 5, 
+     main = 'Belang score van sociale media voor studenten',
+     xlab = "Belang score van sociale media",
+     ylab = "Frequentie",
+     col = rainbow(10))
+print(paste0("Figuur ", a))
+a = a + 1
+```
+
+\newpage
+
+
+##Gaat het gebruik van sociale media veranderen naarmate de leeftijd van studenten toeneemt?
+De trendlijn geeft de verandering van sociale media gebruik over de leeftijden weer.
+```{r echo=FALSE}
+age <- as.numeric(Onderzoek_Antwoorden$What.is.your.age.)
+
+time_list.data_frame <- data.frame(time_list.numeric[-8])
+total_time_used <- rowSums(time_list.data_frame, na.rm = TRUE)
+
+voorspeling <- 10
+
+plot(total_time_used ~ age,
+     main = "Totaal gebruik van studenten per leeftijd",
+     xlab = "Leeftijd",
+     ylab = "Totaal gebruik per student",
+     col = 'olivedrab4')
+trentlijn <- lm(total_time_used ~ age)
+abline(trentlijn)
+print(paste0("Figuur ", a))
+a = a + 1
+```
+
+\newpage
+
+##Geeft het gebruik van sociale media genoeg voldoening om de tijd investering te rechtvaardigen?
+Hier wordt bepaald of het sociale media gebruik van studenten door zichzelf als voldoenend wordt gezien. Dus dit laat zien of studenten vinden dat hun tijd waardevol is besteed aan sociale media.
+```{r content use data prep, echo=FALSE}
+Onderzoek_Antwoorden <- read.csv("Social media (Antwoorden) - Formulierreacties 1.csv", as.is = c("What.other.social.media.platforms.do.you.use."))
+
+content_insta <- Onderzoek_Antwoorden$Are.you.content.with.the.time.you.put.into.this.platform.
+content_facebook <- Onderzoek_Antwoorden$Are.you.content.with.the.time.you.put.into.this.platform..1
+content_whatsapp <- Onderzoek_Antwoorden$Are.you.content.with.the.time.you.put.into.this.platform..2
+content_twitter <- Onderzoek_Antwoorden$Are.you.content.with.the.time.you.put.into.this.platform..3
+content_snapchat <- Onderzoek_Antwoorden$Are.you.content.with.the.time.you.put.into.this.platform..4
+
+
+content_insta.logical <- c(TRUE, FALSE)[factor(content_insta, levels = c("Yes", "No"))]
+content_facebook.logical <- c(TRUE, FALSE)[factor(content_facebook, levels = c("Yes", "No"))]
+content_whatsapp.logical <- c(TRUE, FALSE)[factor(content_whatsapp, levels = c("Yes", "No"))]
+content_twitter.logical <- c(TRUE, FALSE)[factor(content_twitter, levels = c("Yes", "No"))]
+content_snapchat.logical <- c(TRUE, FALSE)[factor(content_snapchat, levels = c("Yes", "No"))]
+
+calc_percentage <- function(x, y){
+  content_yes <- sum(x[y == "Yes"])/length(na.omit(x))*100
+  content_no <- length(x[y == "No"])/ length(na.omit(x))*100
+  return(c(content_yes, content_no))
+}
+
+content.data <-
+c(calc_percentage(content_insta.logical, content_insta), calc_percentage(content_facebook.logical, content_facebook), calc_percentage(content_whatsapp.logical, content_whatsapp), calc_percentage(content_twitter.logical, content_twitter), calc_percentage(content_snapchat.logical, content_snapchat))
+
+perc.content.matrix <- matrix(content.data,  nrow = 2, ncol = 5)
+colnames(perc.content.matrix) <- c("Instagram", "Facebook", "Whatsapp", "Twitter", "Snapchat")
+rownames(perc.content.matrix) <- c("Yes", "No")
+
+par(mar=c(5, 4, 4, 4))
+barplot(perc.content.matrix,
+        col=c("Green", "Red"),
+        las=2, beside = T,
+        ylim = c(0, 100),
+        ylab = "Percentage",
+        main = "Percentage van gebuikers die tevreden zijn \n met hun sociale media gebruik, per medium.")
+legend(x = 1, y = 102, legend = rownames(perc.content.matrix), col=c("Green", "Red"), pch = 15, cex = 0.55)
+print(paste0("Figuur ", a))
+a = a + 1
+```
+
+\newpage
+
+## Hoofdvraag
+* 'Heeft het gebruik van sociale media negatieve effecten op het sociale leven van een student?'  
+
+Met negatieve effecten wordt een vermindering van sociale activiteiten en contacten bedoeld.
+
+Voor deze vraag is gekeken naar een aantal factoren:
+
+* Het aantal vrienden
+* De tijd die ze besteden met hun vrienden
+* Hoe vaak ze hun vrienden zien per maand
+* De tijd die ze besteden aan sociale media
+
+
+### Tijd besteed aan sociale media tegenover aantal goede vrienden.
+
+```{r echo=FALSE}
+close_friends <- as.character(Onderzoek_Antwoorden$How.many.friends.do.you.consider.to.be.close.friends.)
+close_friends[close_friends == "> 10"] <- "10"; close_friends.numeric <- as.numeric(close_friends)
+
+plot(close_friends.numeric, total_time_used,
+     main = "Tijd besteed aan sociale media tegenover aantal vrienden",
+     xlab = "Aantal vrienden",
+     ylab = "Tijd besteed aan sociale media per dag in uur",
+     col = "green3")
+trentlijn.time.close_friends <- lm(total_time_used ~ close_friends.numeric)
+
+abline(trentlijn.time.close_friends)
+print(paste0("Figuur ", a))
+a = a + 1
+```
+
+```{r echo=FALSE}
+print(paste("De correlatie is: ", cor(cbind(total_time_used, close_friends.numeric))[3]))
+```
+
+
+### Tijd besteed aan sociale media tegenover tijd besteed met vrienden
+
+```{r echo=FALSE}
+levels_close_friends_time <- c("< 1 hour", "1 - 2 hours", "2 - 3 hours", "3 - 4 hours", "5 - 6 hours", "> 6 hours")
+close_friends_time <- factor(Onderzoek_Antwoorden$How.much.time..on.average..do.you.spend.with.your.close.friends.when.you.meet., levels = levels_close_friends_time, ordered = TRUE)
+
+close_friends_time.numeric <- c(0.5, 1.5, 2.5, 3.5, 5.5, 6.5)[close_friends_time]
+
+plot(close_friends_time.numeric, total_time_used,
+     main = "Tijd besteed aan vrienden tegenover tijd besteed aan sociale media",
+     xlab = "Gemiddelde tijd besteed aan vrienden per ontmoeting in uur",
+     ylab = "Tijd besteed per dag aan sociale media in uur",
+     col = "blue3")
+trentlijn.time.close_friends_time <- lm(total_time_used ~ close_friends_time.numeric)
+
+abline(trentlijn.time.close_friends_time)
+print(paste0("Figuur ", a))
+a = a + 1
+```
+
+```{r echo=FALSE}
+print(paste("De correlatie is: ", cor(cbind(total_time_used, close_friends_time.numeric))[3]))
+```
+
+
+### Aantal goede vrienden tegenover aantal ontmoetingen per maand
+
+```{r echo=FALSE}
+close_friends_meeting <- Onderzoek_Antwoorden$How.frequently..on.average..do.you.meet.your.close.friends.outside.of.social.media.
+
+close_friends_meeting.numeric <- c(30, 1, 4, 10, 2)[close_friends_meeting]
+
+plot(close_friends_meeting.numeric ~ close_friends,
+     main = "Aantal vrienden tegenover aantal ontmoetingen per maand",
+     xlab = "Aantal vrienden",
+     ylab = "Aantal ontmoetingen met vrienden per maand",
+     col = "yellow4")
+
+abline(lm(close_friends ~ close_friends_meeting.numeric))
+
+print(paste0("Figuur ", a))
+a = a + 1
+```
+
+```{r echo=FALSE}
+print(paste("De correlatie is: ", cor(cbind(close_friends.numeric, close_friends_meeting.numeric))[3]))
+```
+
+
+### Gemiddeld aantal dagen met vrienden ontmoet tegenover aantal vrienden
+
+```{r echo=FALSE}
+close_friends_meeting.list <- vector("list", 10)
+
+for (num in 0:10){
+  close_friends_meeting.list[[num+1]]<- close_friends_meeting.numeric[close_friends == num]
+}
+
+close_friends_meeting.mean <- lapply(close_friends_meeting.list, mean)
+
+plot(unlist(close_friends_meeting.mean) ~ seq(0, 10),
+     main = "Gemiddeld aantal dagen afgesproken met vrienden \n vergeleken met aantal vrienden",
+     xlab = "Aantal vrienden",
+     ylab = "Gemiddelde ontmoetingen met vrienden per maand",
+     col = "violetred")
+
+abline(lm(unlist(close_friends_meeting.mean) ~ seq(0, 10)))
+print(paste0("Figuur ", a))
+a = a + 1
+```
+
+```{r echo=FALSE}
+print(paste("De correlatie is: ", cor(cbind(unlist(close_friends_meeting.mean), seq(0, 10)))[3]))
+```
+
+
+### Tijd besteed bij vrienden tegenover tijd besteed aan sociale media
+
+```{r echo=FALSE}
+time_spend_with_friends.month <- close_friends_time.numeric * close_friends_meeting.numeric
+
+plot(time_spend_with_friends.month ~ total_time_used,
+     main = "Tijd besteed aan vrienden tegenover tijd besteed aan sociale media",
+     xlab = "Tijd besteed aan sociale media per dag in uur",
+     ylab = "Tijd besteed aan vrienden per maand in uur",
+     col = "turquoise3")
+abline(lm(time_spend_with_friends.month ~ total_time_used))
+
+print(paste0("Figuur ", a))
+a = a + 1
+```
+
+```{r echo=FALSE}
+print(paste("De correlatie is: ", cor(cbind(time_spend_with_friends.month, total_time_used))[3]))
+```
+
+\newpage
+
+# Conclusie en Discussie
+
+## Conclusie
+
+Uit de data is gekomen dat er bijna geen verband ligt tussen het gebruik van sociale media en het hebben van sociaal contact in het echte leven.
+De correlaties van de testen bij de hoofdvraag laten dit vooral zien. De laatste grafiek heeft de hoogste correlatie, er is enige trend in te zien maar de data is alsnog erg verdeeld.
+Alle data was erg gespreid en de meeste combinaties van data zijn ook voorgekomen, wat er voor zorgt dat het opmaken van verbanden erg lastig is.
+Sociale media wordt erg veel gebruikt, Twitter en Facebook worden het minste tijd in gestopt, terwijl Discord gemiddeld gezien het langst gebruikt wordt.
+Er is duidelijk te zien dat sociale media het meest wordt gebruikt onder de jongere studenten, terwijl het bij oudere studenten minder wordt gebruikt.
+Vrouwen gebruiken over het algemeen meer platformen zoals Facebook en Instagram, terwijl de demografie van Discord voornamelijk uit mannen bestaat. Mannen besteden over het algemeen ook meer tijd aan sociale media dan vrouwen. Op een schaal van 1 tot 10 geven studenten sociale media gemiddeld een 7 wat betreft belang, de score is verder vrij normaal verdeeld. 
+Er is ook een duidelijke trend zichtbaar dat mensen die meer tijd spenderen op sociale media het ook belangrijker vinden. De grafiek bij figuur 8 bevat een negatieve trendlijn, hieruit kan je opmaken dat het sociale media gebruik af neemt naarmate een student ouder wordt. Het overgrote deel van de studenten vindt dat hun tijd nuttig besteed is aan sociale media, WhatsApp en Snapchat hebben de hoogste voldoening. Over het algemeen lijkt sociale media genoeg voldoening te geven om de investering van tijd te rechtvaardigen.
+
+## Discussie
+
+Voor een volgende keer zouden er een aantal dingen moeten veranderen. Het versturen van de enquête ging via WhatsApp en dit medium stond ook in de enquête, wat er in resulteerde dat 100% van de studenten WhatsApp gebruikt. Ook is het slim om de tijdsaanduiding te veranderen bij de vragen in de enquête per medium, om nauwkeurigere resultaten te krijgen.
+Voor het verkrijgen van de data hebben we studenten van verschillende instituten en niveaus gevraagd om een centralisatie van de data te voorkomen, dit heeft goed uitgepakt.
+
+

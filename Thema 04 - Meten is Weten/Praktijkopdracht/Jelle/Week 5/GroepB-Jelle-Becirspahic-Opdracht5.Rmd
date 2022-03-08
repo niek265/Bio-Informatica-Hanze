@@ -1,0 +1,120 @@
+---
+title: "Oefeningen week 5"
+output: html_notebook
+author: "Jelle Becirspahic"
+---
+
+###Opdracht 1  
+*Download de meest recente lijst met aardbevingen en geef de 5 plaatsen met de zwaarste aardbevingen.*
+
+```{r}
+all_induced <- read.csv("all_induced.csv")
+highest_values <- order(all_induced$MAG, decreasing = T)[1:5]
+
+all_induced$LOCATION[highest_values]
+```
+
+###Opdracht 2
+*In welke tien plaatsen hebben zich de meeste opgewekte aardbevingen voorgedaan met een sterkte van meer dan 1.5?*
+
+```{r}
+waarde <- order(all_induced$MAG, decreasing = T)[sort(all_induced$MAG, decreasing = T) > 1.5]
+
+names(sort(table(all_induced$LOCATION[waarde]), decreasing = T)[1:10])
+
+```
+
+###Opdracht 3
+*Is er in de gemeente Loppersum een trend in de frequentie van het optreden van aardbevingen zichtbaar?*
+
+```{r}
+indices <- which(all_induced$LOCATION == "Loppersum")
+date <- all_induced$YYMMDD[indices]
+
+hist(floor(date/10000), breaks = 35)
+
+```
+
+###Opdracht 4
+*De dataset bevat regels met metingen aan verschillende soorten irissen. Gemeten zijn de lengte en de breedte van de kelk- en de bloemblaadjes. Welke van deze gegevens kun je gebruiken om een iris die je in de tuin hebt te determineren? Maak een figuur c.q. de figuren die je hiervoor nodig hebt.*
+
+```{r}
+summary(iris)
+
+plot(iris$Species, iris$Sepal.Length, main="Sepal Length per species", ylab="Sepal length [cm]", xlab = "Species")
+plot(iris$Species, iris$Sepal.Width, main="Sepal Width per species", ylab="Sepal Width [cm]", xlab = "Species")
+plot(iris$Species, iris$Petal.Length, main="Petal Length per species", ylab="Petal length [cm]", xlab = "Species")
+plot(iris$Species, iris$Petal.Width, main="Petal Width per species", ylab="Petal Width [cm]", xlab = "Species")
+```
+Bij de blad lengte is het grootste verschil te zien tussen de verschillende soorten. Hier zou dus het makkelijkst onderscheid in te maken zijn.
+
+###Opdracht 5
+*Geef in een codeblok de R-code waarmee je een .xls in kunt lezen in R*
+
+```{r}
+library("readxl")
+my.data <- read_excel("my_file.xls")
+```
+
+###Opdracht 6
+*Je kunt een .xls ook converteren naar het .csv formaat. Leg uit (code en tekst) hoe je dit m.b.v. Python doet.*
+
+```{python}
+import xlrd
+import csv
+
+  def csv_from_excel():
+    wb = xlrd.open_workbook('your_workbook.xls')
+    sh = wb.sheet_by_name('Sheet1')
+    your_csv_file = open('your_csv_file.csv', 'wb')
+    wr = csv.writer(your_csv_file, quoting=csv.QUOTE_ALL)
+
+    for rownum in xrange(sh.nrows):
+        wr.writerow(sh.row_values(rownum))
+
+    your_csv_file.close()
+```
+
+###Opdracht 7
+*Je kunt een .xls ook converteren naar het .csv formaat. Leg uit (code) hoe je dit m.b.v. LibreOffice kunt doen.*
+
+libreoffice --headless --convert-to csv "my_file.xls"
+
+###Opdracht 8
+*Pas het commando uit opdracht 7 zo aan dat je alle .xls bestanden in één directory tegelijk converteert.*
+
+libreoffice --headless --convert-to csv *.xls
+
+###Opdracht 9
+*In /homes/arne/tmp/data/ staan een aantal .xls bestanden die gegevens over een batterij zonnecellen bevatten. I staat voor stroomsterkte in Ampere V staat voor spanning in Volt F staat voor de (wisselstroom)frequentie in Herz. Pac staat voor het op dat moment afgegeven vermogen in Watt. pv staat voor ‘photo voltaic’ dus opgewekt door de zonnecellen. Er zijn hier twee groepen voor. ac staat voor ‘alternating current’ dus dit wordt doorgegeven aan het stroomnetwerk. Hiervoor zijn er 3 fasen. De overige velden zouden voor zich moeten spreken.* 
+*Copiëer deze data naar een directory in je eigen home en lees ze in in R.*
+
+```{r}
+read.xls.self <- function(x){
+  read_xls(x, col_names = T, skip = 2)
+}
+my.data <- lapply(Sys.glob("*.xls"), read.xls.self)
+
+names(my.data) <- c(1:length(my.data))
+```
+
+###Opdracht 10
+*Gebruik de gegevens die je in opdracht 9 ingelezen hebt. Maak één figuur waarin je het totaal aantal KWh wat gegenereerd is uitzet tegen de tijd (datum). Gebruik hiervoor de gegevens uit alle bestanden. Laat de datum zien in het formaat yyyymmdd.*
+
+```{r}
+tijd <- numeric(0)
+gegenereerd <- numeric(0)
+for(num in 1:length(my.data)){
+  tijd <- c(tijd, my.data[[num]]$Time)
+  gegenereerd <- c(gegenereerd, my.data[[num]]$`Total Generation(kWh)`)
+  rm(num)
+}
+tijd <- as.Date(tijd, format = "%m/%d/%Y")
+plot(tijd, gegenereerd)
+```
+
+
+
+
+
+

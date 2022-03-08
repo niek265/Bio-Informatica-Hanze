@@ -1,0 +1,39 @@
+---
+title: "Onderzoeksopdracht"
+author: "Jelle Becirspahic"
+date: "May 6, 2019"
+output: pdf_document
+---
+
+###Wat is de invloed van sociale media op je sociale contacten?  
+
+**Beschrijvend onderzoek**  
+Wat zijn de kenmerken? Wie moet dit uitvoeren? Hoe ziet het eruit?
+
+**Vergelijkend onderzoek**  
+Wat zijn de verschillen? Wat zijn de overeenkomsten? In welke opzichten zijn ze anders? Op welke punten lijken ze op elkaar?
+
+**Definiërend onderzoek**  
+In welk stadium zit de ontwikkeling? Hoe kan het getypeerd worden? Waar is het een voorbeeld van? Hoort het hierin thuis?
+
+**Evaluerend, normatief onderzoek**  
+Wat zijn de positieve punten? Wat is de waarde ervan? Hoe goed werkt het? Hoe geschikt is het? Hoe wenselijk is…? Wat zijn voordelen of nadelen?
+
+Verklarend, explorerend onderzoek  
+Waar is dit een gevolg van? Hoe komt dat? Wat zijn de oorzaken?
+
+Voorspellend onderzoek  
+In welke mate zal? Waar zal dat toe leiden? Zal in de toekomst? Waar moet organisatie X op zijn voorbereid?
+
+Ontwerpend, probleemoplossend en adviserend onderzoek  Hoe kan ervoor gezorgd worden dat…? Hoe moet…? Wat kan er gedaan worden om dit op te lossen?
+
+Toetsend onderzoek  
+Zijn jongens sneller dan meisjes? Welk effect heeft….op….?  
+
+**Antwoorden**  
+welke sociale media worden het meest door studenten gebruikt?  
+Wat is het verschil in gebruik tussen leeftijdsgroepen?  
+Wat zijn onderdelen van het sociale leven van de student?  
+Hoe belangrijk vindt een student sociale media?  
+Wat is de oorzaak van deze significantie voor een student?  
+Geeft het gerbuik van sociale media

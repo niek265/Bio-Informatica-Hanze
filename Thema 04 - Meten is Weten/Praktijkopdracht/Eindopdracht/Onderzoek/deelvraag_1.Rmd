@@ -1,0 +1,110 @@
+---
+title: "R Notebook"
+output:
+  pdf_document: default
+  html_notebook: default
+---
+
+```{r import_onderzoek_data, include=FALSE}
+# Data set inlezen
+library(readr)
+Onderzoek_Antwoorden <- read.csv("Social media (Antwoorden) - Formulierreacties 1.csv", 
+                                 as.is = c("What.is.your.age.", 
+                                           "What.other.social.media.platforms.do.you.use."))
+```
+
+###Hoeveel wordt sociale media gebruikt?  
+Om de gegevens weet te geven voor deze vraag gebruiken we een staaf diagram met de vijf grote sociale media platformen plus een sectie met de overige platformen waar de hoogte weergeeft hoeveel tijd er gemiddeld voor het sociale platform wordt gebruikt.  
+```{r data_setup_deelvraag_1, include = FALSE}
+
+# Verzamel de data van tijd besteed op elke platvorm
+levels_insta <- c("0 to 1 hour(s)", "1 to 2 hours", "3 to 4 hours", "4 to 5 hours", "5 to 6 hours", ">6 hours")
+time_insta <- factor(Onderzoek_Antwoorden$How.much.time.do.you.spend.on.this.platform.daily., levels = levels_insta, ordered = T)
+
+levels_fb <- c("0 to 1 hour(s)", "1 to 2 hours", "3 to 4 hours", "4 to 5 hours", "5 to 6 hours", ">6 hours")
+time_fb <- factor(Onderzoek_Antwoorden$How.much.time.do.you.spend.on.this.platform.daily..1, levels = levels_fb, ordered = T)
+
+levels_whatsapp <- c("0 - 30 minutes", "30 minutes - 1 hour", "1 - 1.5 hours", "1.5 - 2 hours", "2 - 2.5 hours", ">3 hours")
+time_whatsapp <- factor(Onderzoek_Antwoorden$How.much.time.do.you.spend.on.this.platform.daily..2, levels = levels_whatsapp, ordered = T)
+
+levels_twitter <- c("0 to 1 hour(s)", "1 to 2 hours", "3 to 4 hours", "4 to 5 hours", "5 to 6 hours", ">6 hours")
+time_twitter <- factor(Onderzoek_Antwoorden$How.much.time.do.you.spend.on.this.platform.daily..3, levels = levels_twitter, ordered = T)
+
+levels_snap <- c("0 to 1 hour(s)", "1 to 2 hours", "3 to 4 hours", "4 to 5 hours", "5 to 6 hours", ">6 hours")
+time_snap <- factor(Onderzoek_Antwoorden$How.much.time.do.you.spend.on.this.platform.daily..4, levels = levels_snap, ordered = T)
+
+levels_disc <- c("< 1 hour", "1 - 2 hours", "2 - 3 hours", "3 - 4 hours", "5 - 6 hours", "> 6 hours")
+time_disc <- factor(Onderzoek_Antwoorden$How.much.time..on.average..do.you.spend.on.these.platforms.daily., levels = levels_disc, ordered = T)
+
+levels_overig <- c("0 - 30 minutes", "30 minutes - 1 hour", "1 - 1.5 hours", "1.5 - 2 hours", "2 - 3 hours", "3 - 4 hours", "4 - 5 hours", ">5 hours")
+time_overig <- factor(Onderzoek_Antwoorden$How.much.time..on.average..do.you.spend.on.these.social.platforms.on.a.daily.basis., levels = levels_overig, ordered = T)
+
+time_list <- list(Instagram = time_insta, Facebook = time_fb, Whatsapp = time_whatsapp, Twitter = time_twitter, Snapchat = time_snap, Discord = time_disc, 'Overige Platforms' = time_overig)
+
+# Verwijder de level variabelen
+rm(levels_insta, levels_fb, levels_whatsapp, levels_twitter, levels_snap, levels_disc, levels_overig)
+
+# Verwijder de losse variabelen
+rm(time_insta, time_fb, time_whatsapp, time_twitter, time_snap, time_disc, time_overig)
+```
+
+```{r}
+for (platvorm in names(time_list)){
+  print("")
+  barplot(table(time_list[[platvorm]]),
+        main = paste("The time people spend on", platvorm ,"on a daily basis"),
+        col = rainbow(6),
+        cex.names = .5,
+        ylim = c(0, max(table(time_list[[platvorm]])) + 5),
+        xlab = "Time Spend using the social platform",
+        ylab = "Frequentie []"
+        )
+  rm(platvorm)
+}
+```
+
+**Gemiddelde per platvorm en gemiddelde totaal van elk platform**  
+```{r numeric_data_setup, echo=FALSE}
+time_insta.numeric <- c(0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6)[time_list$Instagram]
+time_fb.numeric <- c(0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6)[time_list$Facebook]
+time_whatsapp.numeric <- c(0.25, 0.75, 1.25, 1.75, 2.25, 3)[time_list$Whatsapp]
+time_twitter.numeric <- c(0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6)[time_list$Twitter]
+time_snap.numeric <- c(0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6)[time_list$Snapchat]
+time_disc.numeric <- c(0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6)[time_list$Discord]
+time_overig.numeric <- c(0.25, 0.75, 1.25, 1.75, 2.5, 3.5, 4.5, 5)[time_list$`Overige Platforms`]
+time_all.numeric <- c(time_insta.numeric, time_fb.numeric, time_whatsapp.numeric, time_twitter.numeric, time_snap.numeric, time_disc.numeric, time_overig.numeric)
+
+time_list.numeric <- list(Instagram = time_insta.numeric, Facebook = time_fb.numeric, Whatsapp = time_whatsapp.numeric, Twitter = time_twitter.numeric, Snapchat = time_snap.numeric, Discord = time_disc.numeric, 'Overige platforms' = time_overig.numeric, 'All platforms' = time_all.numeric)
+
+# Verwijder alle losse variabelen voor overzicht
+rm(time_insta.numeric, time_fb.numeric, time_whatsapp.numeric, time_twitter.numeric, time_snap.numeric, time_disc.numeric, time_overig.numeric, time_all.numeric)
+
+```
+
+```{r calculating_mean, echo=FALSE}
+# Bereken het gemiddelde voor elke platvorm en zet de berekende gemiddelde in een lijst
+time_list.mean <- lapply(time_list.numeric, FUN = function(x){mean(x, na.rm = T)} )
+```
+
+```{r graph_mean_time_spend, echo=FALSE}
+barplot(as.numeric(time_list.mean),
+        main = "The time people spend averagely on each platform on a daily basis",
+        col = rainbow(8),
+        cex.names = .5,
+        ylim = c(0, max(table(time_list.mean)) + 1),
+        names.arg = names(time_list.mean),
+        xlab = "Average time spend on each platvorm",
+        ylab = "Time"
+        )
+```
+
+
+```{r print_mean_time, echo=FALSE}
+# Log de means
+for (platvorm in names(time_list.mean)){
+  cat("De gemiddelde tijd besteed in ", platvorm,":", time_list.mean[[platvorm]], "uur\n")
+  
+  # Verwijder de variablen die in de loop worden gemaakt
+  rm(platvorm)
+}
+```

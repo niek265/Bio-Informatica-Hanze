@@ -1,0 +1,91 @@
+---
+title: "Test"
+author: "Niek Scholten"
+date: "May 24, 2019"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+c(2, 4, 3)
+
+c("a", "b", c("c", "d"))
+
+c(0.1, 0.01, 0.001)
+
+c(2, 4, "a")
+```
+```{r}
+class(c(2, 4, "a"))
+
+class(1:5)
+
+class(c(2, 4, 0.3))
+```
+
+```{r}
+## starting cool analysis
+x <- c(T, F, T) # Creating a logical vector
+y <- c(TRUE, FALSE, TRUE) # same
+
+x <- c(1, 2, 3) # recommended
+x
+
+y = c(2, 3, 1) # legal but not recommended
+y
+
+x <- c(1, 2, 3); x; x <- 42; x
+```
+
+```{r}
+x <- c(2, 4, 3, 5)
+y <- c(6, 2)
+x + y
+
+x * 2
+
+x <- c(2, 4, 3, 5)
+z <- c(1, 2, 3)
+x - z
+```
+
+```{r}
+integer(4)
+
+character(4)
+
+logical(4)
+
+factor(4)
+```
+
+```{r}
+time <- c(1, 2, 3, 4, 5, 6)
+response <- c(0.09, 0.30, 0.41, 0.48, 0.72, 1.12)
+plot(x = time, y = response)
+
+plot(x = time, y = response, pch = 19, type = "b", xlim = c(0, 8),
+     xlab = "Time (hours)", ylab = "Systemic response",
+     main = "Systemic response to agent X", col = "blue")
+```
+
+```{r}
+frequencies <- c(22, 54, 12, 29)
+barplot(frequencies, names = c("one", "two", "three", "four"))
+```
+
+```{r}
+male_weights <- c(rnorm(500, 80, 8)) ## create 500 random numbers around 80
+hist(male_weights)
+par(mfrow = c(1, 2)) # make 2 plots to sit side by side
+hist(male_weights, breaks = 5, col = "gold", main = "Male weights")
+hist(male_weights, breaks = 25, col = "green", main = "Male weights")
+```
+
+
+
+
+

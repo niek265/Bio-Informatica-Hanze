@@ -1,0 +1,93 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+In ons onderzoek gaan we kijken of sociale media negatieve effecten heeft op het sociale leven van studenten.
+Daarom hebben de volgende onderzoeksvraag opgesteld:   
+
+* 'Heeft het gebruik van sociale media negatieve effecten op het sociale leven van een student?'  
+
+De hypotheses die we gaan testen zijn als volgt:  
+
+* 'Het gebruik van sociale media heeft negatieve effecten op het sociale leven van een student.' 
+
+* 'Het gebruik van sociale media heeft geen negatieve effecten op het sociale leven van een student.' 
+
+* 'Het gebruik van sociale media heeft positieve effecten op het sociale leven van een student.' 
+
+* 'Het gebruik van sociale media heeft geen positieve effecten op het sociale leven van een student.' 
+
+Voor deze vraag gaan we:
+- We gaan de tijd besteed met de sociale platvormen vergelijken met de hoeveelheid close friends ze hebben.
+- We gaan de tijd besteed met de sociale platvormen vergelijken met hoeveel tijd ze besteden met hun vrienden.
+
+###Tijd besteed met de sociale platvormen vergelijken met de hoeveelheid close friends ze hebben.
+```{r}
+close_friends <- as.character(Onderzoek_Antwoorden$How.many.friends.do.you.consider.to.be.close.friends.)
+close_friends[close_friends == "> 10"] <- "10"; close_friends.numeric <- as.numeric(close_friends)
+
+plot(close_friends.numeric, total_time_used)
+trentlijn.time.close_friends <- lm(total_time_used ~ close_friends.numeric)
+
+abline(trentlijn.time.close_friends)
+```
+
+###We gaan de tijd besteed met de sociale platvormen vergelijken met hoeveel tijd ze besteden met hun vrienden.
+```{r}
+levels_close_friends_time <- c("< 1 hour", "1 - 2 hours", "2 - 3 hours", "3 - 4 hours", "5 - 6 hours", "> 6 hours")
+close_friends_time <- factor(Onderzoek_Antwoorden$How.much.time..on.average..do.you.spend.with.your.close.friends.when.you.meet., levels = levels_close_friends_time, ordered = TRUE)
+
+close_friends_time.numeric <- c(0.5, 1.5, 2.5, 3.5, 5.5, 6.5)[close_friends_time]
+close_friends_time.numeric
+
+plot(close_friends_time.numeric, total_time_used)
+trentlijn.time.close_friends_time <- lm(total_time_used ~ close_friends_time.numeric)
+
+abline(trentlijn.time.close_friends_time)
+```
+
+###Tijd besteed met vrienden vergelijken tegen hoeveel vrienden ze hebben
+```{r}
+plot(close_friends_time.numeric ~ close_friends.numeric)
+trentlijn.close_friends.close_friends_time <- lm(close_friends_time.numeric ~ close_friends.numeric)
+abline(trentlijn.close_friends.close_friends_time)
+```
+
+```{r}
+#close_friends_time.numeric
+close_friends_meting <- Onderzoek_Antwoorden$How.frequently..on.average..do.you.meet.your.close.friends.outside.of.social.media.
+
+close_friends_meting.numeric <- c(30, 1, 4, 10, 2)[close_friends_meting]
+
+plot(close_friends_meting.numeric ~ close_friends,
+     xlab = "number of close friends",
+     ylab = "number of day spend with close friend in month")
+
+close_friends_meting.list <- vector("list", 10)
+
+for (num in 0:10){
+  close_friends_meting.list[[num+1]]<- close_friends_meting.numeric[close_friends == num]
+}
+
+close_friends_meting.mean <- lapply(close_friends_meting.list, mean)
+
+plot(unlist(close_friends_meting.mean) ~ seq(0, 10),
+     main = "Mean number of days spend with friend compairt to number of friends",
+     xlab = "number of close friends",
+     ylab = "mean number of days spend with friend in a month"
+     )
+abline(lm(unlist(close_friends_meting.mean) ~ seq(0, 10)))
+```
+
+```{r}
+time_spend_with_friends.month <- close_friends_time.numeric * close_friends_meting.numeric
+
+plot(time_spend_with_friends.month ~ total_time_used,
+     main = "Tijd besteed bij frienden tegen tijd besteed in sociale media",
+     xlab = "Tijd besteed in sociale media [dag]",
+     ylab = "Tijd besteed met frienden [maand]")
+abline(lm(time_spend_with_friends.month ~ total_time_used))
+
+
+```
+
