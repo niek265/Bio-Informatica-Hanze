@@ -6,7 +6,7 @@ date: "`r Sys.Date()`"
 output: pdf_document
 ---
 
-[//]: # (Page 1)
+<!-- Page 1 -->
 \thispagestyle{empty}
 
 \vspace{100pt}
@@ -15,7 +15,7 @@ output: pdf_document
 \end{center}
 \setcounter{secnumdepth}{2}
 
-[//]: # (Page 2)
+<!-- Page 2 -->
 \newpage
 
 
@@ -24,7 +24,7 @@ output: pdf_document
 
 \tableofcontents
 
-[//]: # (Page 3)
+<!-- Page 3 -->
 \newpage
 
 
@@ -35,8 +35,12 @@ knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(cache = TRUE)
 
 # Load the packages & register the amount of workers
-packages <- c("affy", "scales", "DESeq2", "BiocParallel",
-              "pheatmap", "PoiClaClu", "ggplot2", "knitr", "pander")
+packages <- c("affy", "scales",
+              "DESeq2", "BiocParallel",
+              "pheatmap", "PoiClaClu",
+              "ggplot2", "edgeR",
+              "knitr", "pander",
+              "EnhancedVolcano", "crayon")
 invisible(lapply(packages, library, character.only = TRUE))
 register(MulticoreParam(12))
 
@@ -65,7 +69,7 @@ colors36 <- rep(colors12, each=3)
 ```
 This is the setup of the project. It loads all the necessary packages and sets values that are important for later.
 
-[//]: # (Page 4)
+<!-- Page 4 -->
 \newpage
 
 # Initial analysis
@@ -73,27 +77,12 @@ The initial analysis includes a summary of the data and a quick look at the visu
 
 ## Summary
 ```{r}
-sumMatrix <- summary(data)
-sumFrame <- data.frame()
-sumGroups <- split(sumMatrix, ceiling(seq_along(sumMatrix)/6))
-sumGroups <- lapply(sumGroups, function (i) {
-  for (j in i){
-      as.numeric(
-        strsplit(j, ":")[[1]][1][2])
-                }
-            }
-       )
-# for (sumGroup in sumGroups) {
-#     sumFrame <- rbind(sumFrame, as.numeric(strsplit(sumGroup, ":")[[1]][2]))
-# }
-
-
 # Disable intertable text
 panderOptions('table.continues', '')
 # Pretty print the output of the data summary
 pander(summary(data), split.tables = 64)
 ```
-[//]: # (Page 5)
+<!-- Page 6 -->
 \newpage
 
 
@@ -108,7 +97,10 @@ boxplot(log2(data+0.1),
         main = "Distrubution of count values",
         cex.axis= 0.6)
 ```
+<!-- Page 7 -->
+\newpage
 
+## Density plot
 ```{r densityplot}
 myColors <- hue_pal()(12)
 
@@ -121,7 +113,11 @@ legend('topright', names(data), lty= seq_len(ncol(data)),
        cex=0.32)  # Fix scale for knitted output
 abline(v=-1.5, lwd=1, col='red', lty=2)
 ```
-```{r DESeq}
+<!-- Page 8 -->
+\newpage
+
+## Heatmap
+```{r Matrix}
 (ddsMat <- DESeqDataSetFromMatrix(countData = data,
                                   colData = data.frame(samples = names(data)),
                                   design = ~ 1))
@@ -145,6 +141,11 @@ pheatmap(sampleDistMatrix, show_colnames = FALSE,
          clustering_distance_cols = sampledists,
          main = "Euclidian Sample Distances")
 ```
+<!-- Page 9 -->
+<!-- Page 10 -->
+\newpage
+
+## Multi dimensional scaling
 ```{r MDS}
 dds <- assay(ddsMat)
 poisd <- PoissonDistance( t(dds) )
@@ -167,12 +168,17 @@ Some samples clearly deviate from the other 2 in the group.
 This is especially clear with X51D_5_S, PrPCyt_30_NBH, X51D_30_NBH & PrPCyt_5_S.
 Strangely, these samples are all the first one in their respective group. This could indicate that the first tests were less accurate.
 Since 3 samples must remain in each group, no data will be removed from the set.
-```{r}
+<!-- Page 11 -->
+\newpage
+
+# Further processing
+```{r DESeq}
 counts.fpm <- log2( fpm(ddsMat, robust = TRUE) + 1 )
 dds <- DESeq(ddsMat, parallel = TRUE)
 res <- results(dds)
 ```
-```{r}
+## Preprocessing
+```{r preprocessing}
 beforeCounts <- counts(dds)
 keep <- rowSums(beforeCounts) >= 10
 dds <- dds[keep,]
@@ -188,3 +194,98 @@ kable(countCompare)
 ```
 The dataset has been trimmed to filter out genes with count values lower than 10.
 This results in a smaller dataset because more than 4000 genes have been removed.
+
+<!-- Page 12 -->
+\newpage
+## Fold change value
+```{r FC}
+X51D_30_NBH.means <- data.frame(X51D_30_NBH.means=rowMeans(afterCounts[,1:3]))
+X51D_30_S.means <- data.frame(X51D_30_S.means=rowMeans(afterCounts[,4:6]))
+X51D_5_NBH.means <- data.frame(X51D_5_NBH.means=rowMeans(afterCounts[,7:9]))
+X51D_5_S.means <- data.frame(X51D_5_S.means=rowMeans(afterCounts[,10:12]))
+
+PrPCyt_30_NBH.means <- data.frame(PrPCyt_30_NBH.means=rowMeans(afterCounts[,13:15]))
+PrPCyt_30_S.means <- data.frame(PrPCyt_30_S.means=rowMeans(afterCounts[,16:18]))
+PrPCyt_5_NBH.means <- data.frame(PrPCyt_5_NBH.means=rowMeans(afterCounts[,19:21]))
+PrPCyt_5_S.means <- data.frame(PrPCyt_5_S.means=rowMeans(afterCounts[,22:24]))
+
+PrPGPI_40_NBH.means <- data.frame(PrPGPI_40_NBH.means=rowMeans(afterCounts[,25:27]))
+PrPGPI_40_S.means <- data.frame(PrPGPI_40_S.means=rowMeans(afterCounts[,28:30]))
+PrPGPI_5_NBH.means <- data.frame(PrPGPI_5_NBH.means=rowMeans(afterCounts[,31:33]))
+PrPGPI_5_S.means <- data.frame(PrPGPI_5_S.means=rowMeans(afterCounts[,34:36]))
+
+X51D_30.diff <- na.omit(log2(X51D_30_NBH.means) - log2(X51D_30_S.means))
+X51D_30.diff <- X51D_30.diff[is.finite(rowSums(X51D_30.diff)),]
+X51D_30.diff <- as.numeric(X51D_30.diff)
+
+hist(X51D_30.diff, breaks=60)
+abline(v = 1, col = "red")
+abline(v = -1, col = "red")
+
+```
+This histogram shows that there are some significant changes to the fold values, especially up-regulated.
+The data compared is that of the X51D fly after 30 days with a Scrapie pathogen and without.
+
+<!-- Page 13 -->
+\newpage
+## Discovering DEG's
+```{r DEG}
+species <- factor(rep(seq(1:3), each = 12), labels = c("X51D", "PrP_Cyt", "PrP_GPI"))
+replicates <- rep(seq(1:3), 12)
+time <- factor(c(1,1,1,1,1,1,2,2,2,2,2,2,1,1,1,1,1,1,2,2,2,2,2,2,1,1,1,1,1,1,2,2,2,2,2,2), labels = c("time_40", "time_5"))
+type <- factor(c(1,1,1,2,2,2,1,1,1,2,2,2,1,1,1,2,2,2,1,1,1,2,2,2,1,1,1,2,2,2,1,1,1,2,2,2), labels = c("NBH", "S"))
+design <- data.frame(species, row.names = colnames(data))
+design <- cbind(design, replicates, time, type)
+
+dds <- DESeqDataSetFromMatrix(countData = data, colData = design, design = ~ species)
+dds <- DESeq(dds, parallel = TRUE)
+res <- results(dds, alpha = 0.05)
+
+group <- c(1,1,1,2,2,2,3,3,3,4,4,4,5,5,5,6,6,6,7,7,7,8,8,8,9,9,9,10,10,10,11,11,11,12,12,12)
+time <- factor(c(1,1,1,1,1,1,2,2,2,2,2,2,1,1,1,1,1,1,2,2,2,2,2,2,1,1,1,1,1,1,2,2,2,2,2,2))
+type <- factor(c(1,1,1,2,2,2,1,1,1,2,2,2,1,1,1,2,2,2,1,1,1,2,2,2,1,1,1,2,2,2,1,1,1,2,2,2))
+model <- model.matrix(~ group + replicates + time + type)
+
+d <- DGEList(counts=afterCounts, group = species)
+d <- calcNormFactors(d)
+
+output <- estimateDisp(d, design = model)
+fit <- glmQLFit(output, design = model)
+
+test <- glmQLFTest(fit, coef=5)
+
+LRT <- glmLRT(fit)
+
+kable(topTags(LRT))
+```
+This table shows the genes with the most significant differences.
+
+<!-- Page 14 -->
+\newpage
+```{r edgePlots}
+plotMDS(calcNormFactors(output), col = colors36)
+plotBCV(calcNormFactors(output))
+
+deGenes <- decideTestsDGE(LRT, p=0.05)
+deGenes <- rownames(LRT)[as.logical(deGenes)]
+plotSmear(LRT, de.tags=deGenes)
+abline(h=c(-1, 1), col=2)
+```
+These plots contain information regarding the DEG's in the dataset.
+
+<!-- Page 14 -->
+\newpage
+
+## Volcano plot
+```{r volcanoplot}
+filtered <- res[!res$baseMean < 10,]
+resultsNames(dds)
+shrunk <- lfcShrink(dds, coef = "species_PrP_GPI_vs_X51D", res = res,
+                     type = "apeglm")
+
+ EnhancedVolcano(shrunk,
+    lab = rownames(shrunk),
+    x = 'log2FoldChange',
+    y = 'pvalue')
+
+```
