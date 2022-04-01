@@ -1,39 +1,127 @@
 ---
 title: "Analysis of Gene Expression"
-subtitle: "Transcriptional signature of prion-induced neurotoxicity in a Drosophila model of transmissible mammalian prion disease"
+subtitle: "Transcriptional signature of prion-induced neurotoxicity in a Drosophila model of transmissible mammalian prion disease."
 author: Niek Scholten
-date: 07-05-22
+date: "`r Sys.Date()`"
 output: pdf_document
 ---
 
-```{r read-data, echo = T, results = 'hide'}
-setwd("/home/nieks/PycharmProjects/Bio-Informatica-Hanze/Thema 07 - Analyse van Genexpressie/Praktijkopdracht")
+[//]: # (Page 1)
+\thispagestyle{empty}
+
+\vspace{100pt}
+\begin{center}
+    \includegraphics[width=5in,height=5in]{drosophila.jpg}\LARGE\\
+\end{center}
+\setcounter{secnumdepth}{2}
+
+[//]: # (Page 2)
+\newpage
+
+
+\clearpage
+\setcounter{page}{1}
+
+\tableofcontents
+
+[//]: # (Page 3)
+\newpage
+
+
+# Setup
+```{r setup, echo = T, results = 'hide', message = F, warning = F}
+# Options for all chunks
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(cache = TRUE)
+
+# Load the packages & register the amount of workers
+packages <- c("affy", "scales", "DESeq2", "BiocParallel",
+              "pheatmap", "PoiClaClu", "ggplot2", "knitr", "pander")
+invisible(lapply(packages, library, character.only = TRUE))
+register(MulticoreParam(12))
+
+# Load the data into a data frame
 data <- read.table("Data/GSE144028.txt")
+
+# Define groups for the replicants
+group <- c("X51D_5_NBH",
+            "X51D_5_S",
+            "X51D_30_NBH",
+            "X51D_30_S",
+            "PrPCyt_5_NBH",
+            "PrPCyt_5_S",
+            "PrPCyt_30_NBH",
+            "PrPCyt_30_S",
+            "PrPGPI_5_NBH",
+            "PrPGPI_5_S",
+            "PrPGPI_40_NBH",
+            "PrPGPI_40_S")
+groups <- factor(rep(1:12, each=3),
+                 labels = group)
+
+# Set color distributions for the graphs
+colors12 <- hue_pal()(12)
+colors36 <- rep(colors12, each=3)
 ```
+This is the setup of the project. It loads all the necessary packages and sets values that are important for later.
 
-```{r boxplot}
-summary(data)
-boxplot((data), outline = FALSE, col = 'green')
+[//]: # (Page 4)
+\newpage
 
+# Initial analysis
+The initial analysis includes a summary of the data and a quick look at the visualisation of this data in a boxplot.
+
+## Summary
+```{r}
+sumMatrix <- summary(data)
+sumFrame <- data.frame()
+sumGroups <- split(sumMatrix, ceiling(seq_along(sumMatrix)/6))
+sumGroups <- lapply(sumGroups, function (i) {
+  for (j in i){
+      as.numeric(
+        strsplit(j, ":")[[1]][1][2])
+                }
+            }
+       )
+# for (sumGroup in sumGroups) {
+#     sumFrame <- rbind(sumFrame, as.numeric(strsplit(sumGroup, ":")[[1]][2]))
+# }
+
+
+# Disable intertable text
+panderOptions('table.continues', '')
+# Pretty print the output of the data summary
+pander(summary(data), split.tables = 64)
+```
+[//]: # (Page 5)
+\newpage
+
+
+## Boxplot
+```{r boxplot, fig.width = 10, fig.height = 8}
+# Create a boxplot for initial analysis
+boxplot(log2(data+0.1),
+        outline = FALSE,
+        col = colors36,
+        horizontal = TRUE,
+        las = 2,
+        main = "Distrubution of count values",
+        cex.axis= 0.6)
 ```
 
 ```{r densityplot}
-library(affy)
-library(scales)
 myColors <- hue_pal()(12)
 
-plotDensity(log2(data + 0.1), col=rep(myColors, each=3),
+plotDensity(log2(data + 0.1), col=colors36,
             lty= seq_len(ncol(data)), xlab="Log2(count)",
             main="Expression Distribution")
 
 legend('topright', names(data), lty= seq_len(ncol(data)),
-       col=rep(myColors, each=3),
+       col=colors36,
        cex=0.32)  # Fix scale for knitted output
 abline(v=-1.5, lwd=1, col='red', lty=2)
 ```
 ```{r DESeq}
-library(DESeq2)
-
 (ddsMat <- DESeqDataSetFromMatrix(countData = data,
                                   colData = data.frame(samples = names(data)),
                                   design = ~ 1))
@@ -43,12 +131,11 @@ rld <- assay(rld.dds)
 sampledists <- dist( t( rld ))
 ```
 ```{r heatmap}
-library(pheatmap)
-
 sampleDistMatrix <- as.matrix(sampledists)
 
 annotation <- data.frame(Type = factor(rep(rep(1:2, each = 3), each = 6),
-                                          labels = c("Normal Brain Homogenate", "Scrapie")))
+                                          labels = c("Normal Brain Homogenate",
+                                                     "Scrapie")))
 
 rownames(annotation) <- names(counts)
 
@@ -59,9 +146,6 @@ pheatmap(sampleDistMatrix, show_colnames = FALSE,
          main = "Euclidian Sample Distances")
 ```
 ```{r MDS}
-library(PoiClaClu)
-library(ggplot2)
-
 dds <- assay(ddsMat)
 poisd <- PoissonDistance( t(dds) )
 
@@ -71,19 +155,6 @@ mdsPoisData <- data.frame( cmdscale(samplePoisDistMatrix) )
 
 names(mdsPoisData) <- c('x_coord', 'y_coord')
 
-groups <- factor(rep(1:12, each=3),
-                 labels = c("X51D_5_NBH",
-                            "X51D_5_S",
-                            "X51D_30_NBH",
-                            "X51D_30_S",
-                            "PrPCyt_5_NBH",
-                            "PrPCyt_5_S",
-                            "PrPCyt_30_NBH",
-                            "PrPCyt_30_S",
-                            "PrPGPI_5_NBH",
-                            "PrPGPI_5_S",
-                            "PrPGPI_40_NBH",
-                            "PrPGPI_40_S"))
 coldata <- names(data)
 
 ggplot(mdsPoisData, aes(x_coord, y_coord, color = groups, label = coldata)) +
@@ -96,3 +167,24 @@ Some samples clearly deviate from the other 2 in the group.
 This is especially clear with X51D_5_S, PrPCyt_30_NBH, X51D_30_NBH & PrPCyt_5_S.
 Strangely, these samples are all the first one in their respective group. This could indicate that the first tests were less accurate.
 Since 3 samples must remain in each group, no data will be removed from the set.
+```{r}
+counts.fpm <- log2( fpm(ddsMat, robust = TRUE) + 1 )
+dds <- DESeq(ddsMat, parallel = TRUE)
+res <- results(dds)
+```
+```{r}
+beforeCounts <- counts(dds)
+keep <- rowSums(beforeCounts) >= 10
+dds <- dds[keep,]
+afterCounts <- counts(dds)
+
+countCompare <- data.frame(nrow(beforeCounts),
+                           nrow(afterCounts),
+                           nrow(beforeCounts) - nrow(afterCounts))
+colnames(countCompare) <- c("Counts before filtering",
+                            "Counts after filtering",
+                            "Difference in counts")
+kable(countCompare)
+```
+The dataset has been trimmed to filter out genes with count values lower than 10.
+This results in a smaller dataset because more than 4000 genes have been removed.
