@@ -1,0 +1,80 @@
+---
+title: Les1
+author: Lisa Hu, Niek Scholten
+output:
+  pdf_document:
+    number_sections: true
+    latex_engine: xelatex
+---
+```{r setup, include = FALSE, warning = FALSE, message = FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(cache = TRUE)
+```
+
+# Experiment
+```{r}
+## Formule: dY <-  10 - 0.1 * (Y+10)
+
+Y <- 0
+V <-  10 - 0.1 * 10
+dY <- 0.1
+dataset <- data.frame(Y, V, dY)
+
+Y <- 1
+while (round(dY, digits = 5) != 0){
+  dY <- 10 - (0.1 * (V+10))
+  V <- V + dY
+  df <- data.frame(Y, V, dY)
+  dataset <- rbind(dataset, df)
+  Y <- Y + 1
+}
+```
+
+* [1] Welke constanten zitten er in de vergelijking?
+  * De 10 toevoeging is constant.
+* [2] Welke variabele uit de vergelijking veranderd steeds?
+  * De hoeveelheid die eruit gehaald wordt.
+* [3] Wat is de initiele waarde van de variabele uit vraag 2?
+  * 1
+* [4] Wat is het tijdsframe van dit experiment?
+  * Tot t = 137
+* [5] Wanneer is het evenwichts moment?
+  * Het loopt oneindig door (asymptotisch), maar vanaf t = 137 is het verschil zo klein dat het geen significante waarde heeft.
+* [6] Uit welke variabele uit de vergelijking kunnen we dat aflezen?
+  * Uit dY
+
+# Programmeer opdracht
+Voor de volgende opdracht wordt er gebruik gemaakt van deSolve:
+```{r}
+library(deSolve)
+```
+
+Dan hebben we het volgende nodig:
+
+* Parameters en variabelen die betrokken zijn.
+* Vergelijkingen die de verandering/effect beschrijven.
+* Initial state.
+* Tijdframe voor de simulatie
+
+```{r}
+## Create parameters
+parameters <- c(addVolume = 10, pV = 0.1)
+
+## Define model
+volume <- function(t, y, parms){
+  with(as.list(parms),{
+    dY <- addVolume - pV * (y + addVolume)
+    return(list(dY))
+  })
+}
+
+## Initial state
+state <- c(Volume = 0)
+
+## Timeframe
+times <- seq(0, 100, by = 1)
+
+out <- ode(times = times, y = state, parms = parameters, func = volume, method = "euler")
+plot(out)
+```
+
