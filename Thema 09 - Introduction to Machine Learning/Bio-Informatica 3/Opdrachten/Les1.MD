@@ -21,6 +21,7 @@ UniProt
 - universele informatie
 
 ### Welke technieken gebruik je om eiwitten te sequencen?
+Edman degradatie:
 Als je phenylisothiocyanate toe voegt, kan je het 1e aminozuur van een sequentie afsnijden.
 Door telkens 1 af te snijden kan je de volgorde van de aminozuren bepalen.
 

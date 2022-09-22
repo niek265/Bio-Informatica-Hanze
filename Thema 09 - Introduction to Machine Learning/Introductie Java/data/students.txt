@@ -1,0 +1,21 @@
+Student ID	First Name	Last Name
+14154	Lawrence	Faw
+10767	Larae	Rowell
+8062	Cliff	Hassel
+1921	Alline	Peets
+16358	Kaitlyn	Leger
+13038	Forrest	Southern
+1846	Collette	Sommer
+14117	Shandra	Brame
+7330	Bulah	Kittrell
+12431	Bethann	Aguon
+3009	Mistie	Mazzeo
+11307	Cleo	Bontrager
+19085	Nola	Monfort
+19205	Rena	Decicco
+15335	Pei	Speirs
+5385	Reggie	Eatman
+4216	Ehtel	Veloz
+17554	Shizue	Naccarato
+32108	Randi	Mode
+55177	Deandra	Simmons

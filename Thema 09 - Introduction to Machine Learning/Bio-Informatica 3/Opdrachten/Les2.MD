@@ -1,0 +1,1 @@
+Eiwitten kunnen domeinen en motieven hebben.
