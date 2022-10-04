@@ -32,32 +32,32 @@ public class Datatypes {
     String correctDataType1() {
         //USAGE: the age of the universe in whole years. Change the return value -null- to a correct value
         //- the name of the data type that is correct here
-        return null;
+        return "int";
     }
 
     String correctDataType2() {
         //USAGE: the turnover of ATP in a cell, in Molar per minute
-        return null;
+        return "double";
     }
 
     String correctDataType3() {
         //USAßGE: the molecular weight of a protein, in Daltons
-        return null;
+        return "double";
     }
 
     String correctDataType4() {
         //USAGE: the alive/death status of a test animal
-        return null;
+        return "boolean";
     }
 
     String correctDataType5() {
         //USAGE: the name of an app user
-        return null;
+        return "string";
     }
 
     String correctDataType6() {
         //USAGE: encoding of human gender (Male, Female, Undefined)
-        return null;
+        return "char";
     }
 
     /* NEW SECTION OF ASSIGNMENTS */
