@@ -23,8 +23,8 @@ class SeverityCheckSNP:
         Initializes the class variables.
         param matrix = Number of the BLOSUM matrix to use.
         """
-        self.data = np.empty(0)
-        self.matrix = bl.BLOSUM(matrix, 0)
+        self.data = np.empty(0)  # Temporary empty array
+        self.matrix = bl.BLOSUM(matrix, 0)  # Initialize a scoring matrix
 
     def __str__(self):
         """
@@ -37,51 +37,58 @@ class SeverityCheckSNP:
         Loads the file into a numpy array.
         param filename = Name of the file to load.
         """
-        count = -1
-        data = []
+        count = -1  # Initialize at -1, so it won't interfere in else
+        data = []  # Initialize empty list
         with open(filename, encoding="UTF-8") as open_file:
             for line in open_file:
-                if line.startswith(">"):
+                if line.startswith(">"):  # If the line is a header, add it to element 1
                     data.append([line.strip()])
                     count += 1
-                else:
+                else:  # If it is not a header, add it to the rest of the elements
                     for char in line.strip():
                         data[count].append(char)
 
-        self.data = np.array(data)
+        self.data = np.array(data)  # Convert list to an array
 
     def calculate_score(self, protein_colnum: int):
         """
         Calculates the severity score of a mutation at a given position in the sequence.
         param protein_colnum = Column number of the protein position to score.
         """
-        protein_col = self.data.transpose()[protein_colnum:][0]
+        protein_col = self.data.transpose()[protein_colnum:][0]  # Flip the array for looping
+        # Calculate maximum and minimum score for determining grades
         max_score = max(self.matrix.values()) * (len(protein_col) * len(protein_col))
         min_score = min(self.matrix.values()) * (len(protein_col) * len(protein_col))
-        max_points_factor = (abs(max_score) + abs(min_score)) / 10
-        score = abs(min_score)
 
-        for i in protein_col:
-            for j in protein_col:
-                if i == "-":
+        # Calculate the total score possible and create a division number
+        max_points_factor = (abs(max_score) + abs(min_score)) / 10
+        score = abs(min_score)  # Set the base score to the "zero" point of the scale
+
+        for i in protein_col:  # Loop 1
+            for j in protein_col:  # Loop 2, so each element is compared to one another
+                if i == "-":  # If it is a gap, use the gap symbol from the matrix
                     score += self.matrix[f"*{j}"]
                 if j == "-":
                     score += self.matrix[f"{i}*"]
+                # Add the number from the matrix to the score
                 score += self.matrix[f"{i}{j}"]
 
+        # Divide the score by the factor based on the maximum possible score
         score = score / max_points_factor
 
+        # Return the score and the column for output
         return score, protein_col
 
     def calculate_all_scores(self):
         """
         Calculates all severity scores for each position in the multiple sequence alignment.
         """
-        scores = ["Importance scores"]
+        scores = ["Importance scores"]  # Initialize the list with first element
         for item in range(len(self.data.transpose()[1:])):
+            # Calculate and append scores to list
             scores.append(self.calculate_score(item+1)[0])
 
-        self.data = np.vstack([self.data, scores])
+        self.data = np.vstack([self.data, scores])  # Stack the new list underneath the data array
         return self.data
 
 
@@ -110,20 +117,23 @@ if __name__ == "__main__":
                         help="Generates the scores for all positions "
                              "and prints them to the console with the data."
                              "(Default: False)")
-    args = parser.parse_args()
-    check = SeverityCheckSNP(args.matrix)
-    check.load_file(args.file)
-    if args.all:
+    args = parser.parse_args()  # Parse arguments from commandline
+    check = SeverityCheckSNP(args.matrix)  # Initialize object with possible matrix
+    check.load_file(args.file)  # Load given file into the object
+    if args.all:  # If "-all" is picked, calculate all scores
         print(check.calculate_all_scores())
         store = input(f"Would you like to print these {len(check.data)}"
                       f" lines to a csv file? (yes or no): ")
         if store in ["yes", "y"]:
             file_to_store = input("Please enter a file path to output to: ")
+            # Convert the file to csv data and save it to given path
             pd.DataFrame(check.data).to_csv(file_to_store)
         else:
+            # Exit program if "no" is picked
             sys.exit(0)
     else:
         answer = check.calculate_score(args.p)
+        #  Print severity score in an orderly fashion
         print(f"The severity score for a mutation in protein "
               f"at position {args.p} is {answer[0]} out of 10.\n"
               f"The scored proteins are: {answer[1]} ('-' means a gap).")
