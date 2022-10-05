@@ -120,7 +120,7 @@ if __name__ == "__main__":
     args = parser.parse_args()  # Parse arguments from commandline
     check = SeverityCheckSNP(args.matrix)  # Initialize object with possible matrix
     check.load_file(args.file)  # Load given file into the object
-    if args.all:  # If "-all" is picked, calculate all scores
+    if args.all:  # If "--all" is picked, calculate all scores
         print(check.calculate_all_scores())
         store = input(f"Would you like to print these {len(check.data)}"
                       f" lines to a csv file? (yes or no): ")
