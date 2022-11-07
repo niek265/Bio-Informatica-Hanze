@@ -50,34 +50,59 @@ class SeverityCheckSNP:
 
         self.data = np.array(data)  # Convert list to an array
 
-    def calculate_score(self, protein_colnum: int):
+    def calculate_score(self, protein_colnum: int, new_protein: str = ""):
         """
         Calculates the severity score of a mutation at a given position in the sequence.
         param protein_colnum = Column number of the protein position to score.
         """
+
         protein_col = self.data.transpose()[protein_colnum:][0]  # Flip the array for looping
-        # Calculate maximum and minimum score for determining grades
-        max_score = max(self.matrix.values()) * (len(protein_col) * len(protein_col))
-        min_score = min(self.matrix.values()) * (len(protein_col) * len(protein_col))
 
-        # Calculate the total score possible and create a division number
-        max_points_factor = (abs(max_score) + abs(min_score)) / 10
-        score = abs(min_score)  # Set the base score to the "zero" point of the scale
+        if f"{new_protein.upper()}*" in self.matrix.keys():
+            # Calculate maximum and minimum score for determining grades
+            max_score = max(self.matrix.values()) * len(protein_col) + 1
+            min_score = min(self.matrix.values()) * len(protein_col) + 1
 
-        for i in protein_col:  # Loop 1
-            for j in protein_col:  # Loop 2, so each element is compared to one another
+            # Calculate the total score possible and create a division number
+            max_points_factor = (abs(max_score) + abs(min_score)) / 10
+            score = abs(min_score)  # Set the base score to the "zero" point of the scale
+
+            for i in protein_col:
                 if i == "-":  # If it is a gap, use the gap symbol from the matrix
-                    score += self.matrix[f"*{j}"]
-                if j == "-":
-                    score += self.matrix[f"{i}*"]
+                    score += self.matrix[f"*{new_protein}"]
                 # Add the number from the matrix to the score
-                score += self.matrix[f"{i}{j}"]
+                score += self.matrix[f"{i}{new_protein}"]
 
-        # Divide the score by the factor based on the maximum possible score
-        score = score / max_points_factor
+            # Divide the score by the factor based on the maximum possible score
+            score /= max_points_factor
+            # Return the score and the column for output
+            return 10-score, protein_col
 
-        # Return the score and the column for output
-        return score, protein_col
+        elif new_protein == "":
+            # Calculate maximum and minimum score for determining grades
+            max_score = max(self.matrix.values()) * (len(protein_col) * len(protein_col))
+            min_score = min(self.matrix.values()) * (len(protein_col) * len(protein_col))
+
+            # Calculate the total score possible and create a division number
+            max_points_factor = (abs(max_score) + abs(min_score)) / 10
+            score = abs(min_score)  # Set the base score to the "zero" point of the scale
+
+            for i in protein_col:  # Loop 1
+                for j in protein_col:  # Loop 2, so each element is compared to one another
+                    if i == "-":  # If it is a gap, use the gap symbol from the matrix
+                        score += self.matrix[f"*{j}"]
+                    if j == "-":
+                        score += self.matrix[f"{i}*"]
+                    # Add the number from the matrix to the score
+                    score += self.matrix[f"{i}{j}"]
+
+            # Divide the score by the factor based on the maximum possible score
+            score /= max_points_factor
+
+            # Return the score and the column for output
+            return score, protein_col
+        else:
+            raise SyntaxError("Input is not correct, please check '--help' for info")
 
     def calculate_all_scores(self):
         """
@@ -131,9 +156,19 @@ if __name__ == "__main__":
         else:
             # Exit program if "no" is picked
             sys.exit(0)
+    elif args.p is None:
+        raise SyntaxError("No position specified, please use '-p' or '--all'")
     else:
         answer = check.calculate_score(args.p)
         #  Print severity score in an orderly fashion
         print(f"The severity score for a mutation in protein "
               f"at position {args.p} is {answer[0]} out of 10.\n"
               f"The scored proteins are: {answer[1]} ('-' means a gap).")
+        new_char = input("Please select a protein to compare to this set: (type anything else to exit)\n")
+        while f"{new_char.upper()}*" in check.matrix.keys():
+            new_answer = check.calculate_score(args.p, new_char)
+            print(f"The severity score for a mutation to protein {new_char.upper()} "
+                  f"at position {args.p} is {new_answer[0]} out of 10.\n"
+                  f"The scored proteins are: {new_answer[1]} ('-' means a gap).")
+            new_char = input("Please select a protein to compare to this set: (type anything else to exit)\n")
+        sys.exit(0)
